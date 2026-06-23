@@ -1,0 +1,6 @@
+Test Case,Status,Details
+Load Application,Pass,Application loaded successfully
+Navigate to Login,Pass,Login screen displayed
+Empty Login Validation,Pass,Validation alert shown
+Biometric Login,Pass,Successfully bypassed login
+Dashboard Elements Load,Pass,Dashboard stats are visible

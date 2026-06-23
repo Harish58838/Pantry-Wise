@@ -1,0 +1,75 @@
+Test Case,Status,Details
+Load Application,Pass,Application loaded successfully
+Navigate to Login,Fail,"Message: element not interactable
+  (Session info: chrome=148.0.7778.217); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+	chromedriver!GetHandleVerifier [0x7ff714b47de5+14895]
+	chromedriver!GetHandleVerifier [0x7ff714b47e50+14900]
+	chromedriver!(No symbol) [0x7ff7148ad396]
+	chromedriver!(No symbol) [0x7ff714908dc4]
+	chromedriver!(No symbol) [0x7ff7148fbce6]
+	chromedriver!(No symbol) [0x7ff71493005a]
+	chromedriver!(No symbol) [0x7ff7148fb566]
+	chromedriver!(No symbol) [0x7ff71495486f]
+	chromedriver!(No symbol) [0x7ff7148f9df8]
+	chromedriver!(No symbol) [0x7ff7148face3]
+	chromedriver!GetHandleVerifier [0x7ff714e5cc49+3296f9]
+	chromedriver!GetHandleVerifier [0x7ff714e57375+323e25]
+	chromedriver!GetHandleVerifier [0x7ff714e7bc82+348732]
+	chromedriver!GetHandleVerifier [0x7ff714b66045+32af5]
+	chromedriver!GetHandleVerifier [0x7ff714b6ecec+3b79c]
+	chromedriver!GetHandleVerifier [0x7ff714b51bc4+1e674]
+	chromedriver!GetHandleVerifier [0x7ff714b51d54+1e804]
+	chromedriver!GetHandleVerifier [0x7ff714b360e7+2b97]
+	KERNEL32!BaseThreadInitThunk [0x7ffb3ecae957+17]
+	ntdll!RtlUserThreadStart [0x7ffb40de427c+2c]
+"
+Empty Login Validation,Fail,"Message: element not interactable
+  (Session info: chrome=148.0.7778.217); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+	chromedriver!GetHandleVerifier [0x7ff714b47de5+14895]
+	chromedriver!GetHandleVerifier [0x7ff714b47e50+14900]
+	chromedriver!(No symbol) [0x7ff7148ad396]
+	chromedriver!(No symbol) [0x7ff714908dc4]
+	chromedriver!(No symbol) [0x7ff7148fbce6]
+	chromedriver!(No symbol) [0x7ff71493005a]
+	chromedriver!(No symbol) [0x7ff7148fb566]
+	chromedriver!(No symbol) [0x7ff71495486f]
+	chromedriver!(No symbol) [0x7ff7148f9df8]
+	chromedriver!(No symbol) [0x7ff7148face3]
+	chromedriver!GetHandleVerifier [0x7ff714e5cc49+3296f9]
+	chromedriver!GetHandleVerifier [0x7ff714e57375+323e25]
+	chromedriver!GetHandleVerifier [0x7ff714e7bc82+348732]
+	chromedriver!GetHandleVerifier [0x7ff714b66045+32af5]
+	chromedriver!GetHandleVerifier [0x7ff714b6ecec+3b79c]
+	chromedriver!GetHandleVerifier [0x7ff714b51bc4+1e674]
+	chromedriver!GetHandleVerifier [0x7ff714b51d54+1e804]
+	chromedriver!GetHandleVerifier [0x7ff714b360e7+2b97]
+	KERNEL32!BaseThreadInitThunk [0x7ffb3ecae957+17]
+	ntdll!RtlUserThreadStart [0x7ffb40de427c+2c]
+"
+Biometric Login,Fail,"Message: element not interactable
+  (Session info: chrome=148.0.7778.217); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+	chromedriver!GetHandleVerifier [0x7ff714b47de5+14895]
+	chromedriver!GetHandleVerifier [0x7ff714b47e50+14900]
+	chromedriver!(No symbol) [0x7ff7148ad396]
+	chromedriver!(No symbol) [0x7ff714908dc4]
+	chromedriver!(No symbol) [0x7ff7148fbce6]
+	chromedriver!(No symbol) [0x7ff71493005a]
+	chromedriver!(No symbol) [0x7ff7148fb566]
+	chromedriver!(No symbol) [0x7ff71495486f]
+	chromedriver!(No symbol) [0x7ff7148f9df8]
+	chromedriver!(No symbol) [0x7ff7148face3]
+	chromedriver!GetHandleVerifier [0x7ff714e5cc49+3296f9]
+	chromedriver!GetHandleVerifier [0x7ff714e57375+323e25]
+	chromedriver!GetHandleVerifier [0x7ff714e7bc82+348732]
+	chromedriver!GetHandleVerifier [0x7ff714b66045+32af5]
+	chromedriver!GetHandleVerifier [0x7ff714b6ecec+3b79c]
+	chromedriver!GetHandleVerifier [0x7ff714b51bc4+1e674]
+	chromedriver!GetHandleVerifier [0x7ff714b51d54+1e804]
+	chromedriver!GetHandleVerifier [0x7ff714b360e7+2b97]
+	KERNEL32!BaseThreadInitThunk [0x7ffb3ecae957+17]
+	ntdll!RtlUserThreadStart [0x7ffb40de427c+2c]
+"
+Dashboard Elements Load,Pass,Dashboard stats are visible

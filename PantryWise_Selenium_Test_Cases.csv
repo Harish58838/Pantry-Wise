@@ -1,0 +1,119 @@
+Test ID,Test Suite,Test Case Description,Element/Locator Strategy,Expected Result
+TC-001,Setup,Launch Chrome Browser in headless mode,webdriver.ChromeOptions(),Browser launches successfully
+TC-002,Setup,Navigate to Application URL,driver.get(url),Page loads within 5 seconds
+TC-003,Setup,Verify Page Title matches 'PantryWise',driver.title,Title is correct
+TC-004,Setup,Verify main app container is visible,By.ID('app-root'),Container is displayed
+TC-005,Authentication,Verify Auth overlay is displayed on first load,By.CLASS_NAME('auth-view-overlay'),Overlay is visible
+TC-006,Authentication,Verify 'Sign In' button is present,By.XPATH('//button[text()="Sign in"]'),Button is present
+TC-007,Authentication,Verify 'Sign Up' button is present,By.XPATH('//button[text()="Sign up"]'),Button is present
+TC-008,Authentication,Verify Email input field is present,By.CSS_SELECTOR('input[type="email"]'),Input is visible
+TC-009,Authentication,Verify Password input field is present,By.CSS_SELECTOR('input[type="password"]'),Input is visible
+TC-010,Authentication,Submit empty login form,By.XPATH('//button[text()="Sign in"]'),Validation error displayed
+TC-011,Authentication,Submit login with invalid email format,sendKeys('invalid-email'),Validation error displayed
+TC-012,Authentication,Submit login with valid email but empty password,sendKeys(email),Validation error displayed
+TC-013,Authentication,Submit login with valid credentials,sendKeys(email password),Login request sent
+TC-014,Authentication,Verify loading spinner appears during login,By.CLASS_NAME('spinner'),Spinner is visible
+TC-015,Authentication,Verify successful redirect to Dashboard,ExpectedConditions.urlContains,URL contains /dashboard
+TC-016,Navigation,Verify bottom tab navigation is visible on mobile viewport,driver.set_window_size(375 812),Bottom nav is visible
+TC-017,Navigation,Verify Dashboard tab icon is active,By.CSS_SELECTOR('.tab-dashboard.active'),Icon is highlighted
+TC-018,Navigation,Click Inventory tab,By.CSS_SELECTOR('.tab-inventory'),Navigation succeeds
+TC-019,Navigation,Verify Inventory screen renders,By.ID('inventory-screen'),Inventory screen is visible
+TC-020,Navigation,Click Family Hub tab,By.CSS_SELECTOR('.tab-family'),Navigation succeeds
+TC-021,Navigation,Verify Family Hub screen renders,By.ID('family-screen'),Family screen is visible
+TC-022,Navigation,Click Scanner tab,By.CSS_SELECTOR('.tab-scanner'),Navigation succeeds
+TC-023,Navigation,Verify Scanner screen requests camera permission,By.CLASS_NAME('camera-permission'),Prompt is visible
+TC-024,Navigation,Click Dashboard tab to return,By.CSS_SELECTOR('.tab-dashboard'),Navigation succeeds
+TC-025,Dashboard,Verify 'Welcome back' greeting is displayed,By.XPATH('//text[contains(.,"Welcome back")]'),Greeting is visible
+TC-026,Dashboard,Verify 'Total Items' stat card is present,By.ID('stat-total-items'),Card is visible
+TC-027,Dashboard,Verify 'Expiring Soon' stat card is present,By.ID('stat-expiring'),Card is visible
+TC-028,Dashboard,Verify Dashboard chart container loads,By.CLASS_NAME('chart-container'),Container is visible
+TC-029,Dashboard,Verify chart renders Canvas element,By.TAG_NAME('canvas'),Canvas is present
+TC-030,Dashboard,Verify Logout button is present in header,By.XPATH('//button[text()="Logout"]'),Button is visible
+TC-031,Inventory,Navigate to Inventory Screen,By.CSS_SELECTOR('.tab-inventory'),Inventory screen active
+TC-032,Inventory,Verify 'Item Name' input is present,By.CSS_SELECTOR('input[placeholder="Item Name"]'),Input is visible
+TC-033,Inventory,Verify 'Quantity' input is present,By.CSS_SELECTOR('input[placeholder="Qty"]'),Input is visible
+TC-034,Inventory,Verify 'Add Item' button is disabled when inputs empty,By.XPATH('//button[text()="Add Item"]'),Button has disabled attribute
+TC-035,Inventory,Enter text into 'Item Name' field,sendKeys('Milk'),Text appears in input
+TC-036,Inventory,Enter number into 'Quantity' field,sendKeys('2'),Number appears in input
+TC-037,Inventory,Click 'Add Item' button,By.XPATH('//button[text()="Add Item"]'),Item is submitted
+TC-038,Inventory,Verify new item appears in the list,By.XPATH('//text[text()="Milk"]'),Item renders in FlatList
+TC-039,Inventory,Verify quantity renders correctly for new item,By.XPATH('//text[contains(.,"Quantity: 2")]'),Quantity is correct
+TC-040,Inventory,Add second item 'Eggs' quantity '12',sendKeys('Eggs' '12'),Item is submitted
+TC-041,Inventory,Verify second item appears in the list,By.XPATH('//text[text()="Eggs"]'),Item renders in FlatList
+TC-042,Inventory,Verify list contains 2 items,len(driver.find_elements),Count is 2
+TC-043,Inventory,Click Delete icon on 'Milk',By.CSS_SELECTOR('.delete-icon'),Delete request sent
+TC-044,Inventory,Verify 'Milk' is removed from list,InvisibilityOfElement('Milk'),Item disappears
+TC-045,Inventory,Verify list contains 1 item,len(driver.find_elements),Count is 1
+TC-046,Inventory,Add item with special characters in name,sendKeys('Coffee @123!'),Item is submitted
+TC-047,Inventory,Verify special character item renders,By.XPATH('//text[text()="Coffee @123!"]'),Item renders correctly
+TC-048,Inventory,Add item with extremely long name,sendKeys('A'*100),Item is submitted
+TC-049,Inventory,Verify long name is truncated via CSS,By.CSS_SELECTOR('.item-name'),Text overflow is hidden
+TC-050,Inventory,Attempt to add item with quantity '0',sendKeys('Apple' '0'),Item is rejected/error shown
+TC-051,Inventory,Attempt to add item with negative quantity,sendKeys('Banana' '-5'),Item is rejected/error shown
+TC-052,Inventory,Attempt to add item with letters in quantity field,sendKeys('Bread' 'abc'),Input restricts letters
+TC-053,Inventory,Click search/filter bar,By.CSS_SELECTOR('.search-bar'),Search is active
+TC-054,Inventory,Type 'Eg' into search bar,sendKeys('Eg'),List filters
+TC-055,Inventory,Verify 'Eggs' is visible in filtered list,By.XPATH('//text[text()="Eggs"]'),Item is visible
+TC-056,Inventory,Verify 'Coffee' is hidden in filtered list,InvisibilityOfElement('Coffee'),Item is hidden
+TC-057,Inventory,Clear search bar,clear(),List resets
+TC-058,Inventory,Verify 'Coffee' is visible again,By.XPATH('//text[contains(.,"Coffee")]'),Item is visible
+TC-059,Family Hub,Navigate to Family Hub Screen,By.CSS_SELECTOR('.tab-family'),Family screen active
+TC-060,Family Hub,Verify Family Hub title renders,By.XPATH('//text[text()="Family Sync Hub"]'),Title is visible
+TC-061,Family Hub,Verify current user appears in member list,By.CLASS_NAME('member-card'),At least 1 member renders
+TC-062,Family Hub,Verify user avatar is displayed,By.CSS_SELECTOR('.avatar i.fa-person'),Icon is visible
+TC-063,Family Hub,Verify user ID renders correctly,By.CSS_SELECTOR('.member-role'),ID is visible
+TC-064,Family Hub,Click 'Invite Member' button (if present),By.ID('btn-invite'),Modal opens
+TC-065,Family Hub,Verify invite code generates,By.ID('invite-code-text'),Code is alphanumeric
+TC-066,Family Hub,Close invite modal,By.CLASS_NAME('modal-close'),Modal closes
+TC-067,Scanner,Navigate to Scanner Screen,By.CSS_SELECTOR('.tab-scanner'),Scanner screen active
+TC-068,Scanner,Verify camera viewfinder overlay renders,By.CLASS_NAME('scan-target'),Overlay is visible
+TC-069,Scanner,Verify 'Align barcode' prompt renders,By.XPATH('//text[contains(.,"Align barcode")]'),Prompt is visible
+TC-070,Scanner,Simulate barcode scan event (JS injection),execute_script('triggerScan("123456789")'),Alert dialog triggers
+TC-071,Scanner,Verify scanned data appears in alert,Alert.text,Alert contains barcode data
+TC-072,Scanner,Click 'Cancel' on scan alert,Alert.dismiss,Alert closes
+TC-073,Scanner,Verify 'Tap to Scan Again' button appears,By.XPATH('//button[text()="Tap to Scan Again"]'),Button is visible
+TC-074,Scanner,Click 'Tap to Scan Again',By.XPATH('//button[text()="Tap to Scan Again"]'),Scanner resets
+TC-075,Scanner,Simulate second barcode scan event,execute_script('triggerScan("987654321")'),Alert dialog triggers
+TC-076,Scanner,Click 'Add' on scan alert,Alert.accept,Item added to DB
+TC-077,Scanner,Verify redirect to Inventory Screen,ExpectedConditions.urlContains,URL contains /inventory
+TC-078,Inventory,Verify scanned item appears in list,By.XPATH('//text[contains(.,"Scanned Item")]'),Item renders
+TC-079,Theme & UI,Switch application to Dark Mode (if toggle exists),By.ID('theme-toggle'),Theme changes
+TC-080,Theme & UI,Verify background color changes to dark slate,value_of_css_property('background-color'),Color is #0F172A
+TC-081,Theme & UI,Verify text color changes to white,value_of_css_property('color'),Color is #F1F5F9
+TC-082,Theme & UI,Switch application to Light Mode,By.ID('theme-toggle'),Theme changes
+TC-083,Theme & UI,Verify background color changes to light,value_of_css_property('background-color'),Color is #F8FAFC
+TC-084,Theme & UI,Verify layout remains intact after window resize to 1024x768,driver.set_window_size(1024 768),No horizontal scroll
+TC-085,Theme & UI,Verify layout remains intact after window resize to 1920x1080,driver.set_window_size(1920 1080),No horizontal scroll
+TC-086,Dashboard,Navigate back to Dashboard,By.CSS_SELECTOR('.tab-dashboard'),Dashboard active
+TC-087,Dashboard,Verify 'Total Items' stat reflects new scanned item,By.ID('stat-total-items'),Number increments by 1
+TC-088,Authentication,Click Logout button,By.XPATH('//button[text()="Logout"]'),Session terminates
+TC-089,Authentication,Verify redirect to Auth screen,ExpectedConditions.visibility_of_element_located,Auth overlay visible
+TC-090,Authentication,Attempt browser back button to access Dashboard,driver.back(),Redirects back to Auth
+TC-091,Authentication,Verify Local Storage session token is removed,execute_script('return localStorage.getItem("token")'),Returns null
+TC-092,Data Persistence,Refresh page while on Auth screen,driver.refresh(),Auth screen remains visible
+TC-093,Authentication,Log back in with valid credentials,sendKeys(email password),Login request sent
+TC-094,Data Persistence,Verify Dashboard loads with previously added data,By.ID('stat-total-items'),Count matches previous session
+TC-095,Network/API,Simulate slow network connection,Chrome DevTools Protocol (Network.emulateNetworkConditions),Simulated 3G
+TC-096,Network/API,Navigate to Inventory Screen,By.CSS_SELECTOR('.tab-inventory'),Screen loads
+TC-097,Network/API,Verify loading skeleton/spinner appears during slow fetch,By.CLASS_NAME('skeleton-loader'),Loader is visible
+TC-098,Network/API,Restore network connection,Chrome DevTools Protocol,Network normal
+TC-099,Security,Verify secure cookies are set (if applicable),driver.get_cookies(),Cookies have Secure flag
+TC-100,Security,Verify HttpOnly cookies are set,driver.get_cookies(),Cookies have HttpOnly flag
+TC-101,Edge Cases,Click Add Item button 10 times rapidly,double_click()/loop,Only 1 item added (debounce check)
+TC-102,Edge Cases,Add item with trailing spaces ' Milk   ',sendKeys(' Milk   '),Spaces stripped in UI
+TC-103,Edge Cases,Add item with HTML tags '<b>Milk</b>',sendKeys('<b>Milk</b>'),Tags are escaped/rendered as text
+TC-104,Edge Cases,Add item with 0 quantity and verify fallback,sendKeys('Juice' '0'),Fallback to quantity 1 or error
+TC-105,Accessibility,Verify Dashboard title has h1 tag,By.TAG_NAME('h1'),Tag is present
+TC-106,Accessibility,Verify inputs have associated aria-labels,get_attribute('aria-label'),Attribute exists
+TC-107,Accessibility,Verify buttons are focusable via Tab key,ActionChains.send_keys(Keys.TAB),Element receives focus
+TC-108,Error Handling,Force API error response (via proxy/mock),execute_script/mock,Mock injected
+TC-109,Error Handling,Refresh page to fetch inventory,driver.refresh(),Fetch fails
+TC-110,Error Handling,Verify generic error banner appears,By.CLASS_NAME('error-banner'),Banner is visible
+TC-111,Error Handling,Verify error banner text is user-friendly,By.CLASS_NAME('error-banner'),Text is not a stack trace
+TC-112,Performance,Measure initial page load time,execute_script('return window.performance.timing'),Load time < 3s
+TC-113,Performance,Measure DOM Interactive time,execute_script('return window.performance.timing'),Interactive time < 2s
+TC-114,Cross-Browser,Run tests on Firefox (GeckoDriver config check),webdriver.Firefox(),Tests pass
+TC-115,Cross-Browser,Run tests on Edge (EdgeDriver config check),webdriver.Edge(),Tests pass
+TC-116,Teardown,Delete all test items from inventory,loop find delete button,Inventory is empty
+TC-117,Teardown,Log out test user,By.XPATH('//button[text()="Logout"]'),Auth screen visible
+TC-118,Teardown,Close browser instance,driver.quit(),Browser closes without memory leak
