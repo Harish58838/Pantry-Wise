@@ -1,0 +1,44 @@
+name: Auto Build Android APK
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code Blueprint
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Setup Java Environment for Android
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Install Application Dependencies
+        working-directory: ./PantryWiseApp/PantryWiseMobileWrapper
+        run: npm install
+
+      - name: Generate Native Android Code
+        working-directory: ./PantryWiseApp/PantryWiseMobileWrapper
+        run: npx expo prebuild --platform android --clean
+
+      - name: Compile and Build APK
+        working-directory: ./PantryWiseApp/PantryWiseMobileWrapper/android
+        run: ./gradlew assembleRelease
+        
+      - name: Upload Finished APK for Download
+        uses: actions/upload-artifact@v4
+        with:
+          name: PantryWise-Mobile-App-APK
+          path: PantryWiseApp/PantryWiseMobileWrapper/android/app/build/outputs/apk/release/app-release.apk
