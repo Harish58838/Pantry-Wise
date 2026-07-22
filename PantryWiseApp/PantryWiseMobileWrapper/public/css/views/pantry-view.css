@@ -1,0 +1,133 @@
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Overlay Modals */
+        .hub-overlay-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 1500;
+            display: none;
+            /* controlled by JS */
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+            padding: 20px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            overflow-y: auto;
+        }
+
+        .nav-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 14.5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-menu-item:hover {
+            background: var(--surface-2);
+            color: var(--text-primary);
+        }
+
+        .nav-menu-item.active {
+            background: rgba(var(--primary-rgb), 0.12);
+            color: var(--primary);
+        }
+
+        .sidebar-nav-footer {
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Main Workspace Hub */
+        .workspace-hub {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-y: auto;
+            position: relative;
+            padding-bottom: 90px;
+            /* space for mobile navbar bottom safe */
+        }
+
+        /* Top Header */
+        .hub-header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+            box-shadow: var(--shadow-1);
+        }
+
+        .header-left-side {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .brand-mobile-trigger {
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-right-side {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        /* Mobile Glassmorphic Bottom Navigation Bar */
+        .mobile-bottom-navbar {
+            display: none;
+            /* activated < 768px */
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 76px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border);
+            z-index: 1000;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: 12px;
+            box-shadow: var(--shadow-glass);
+        }
+
+        .mobile-nav-btn {
+            background: none;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-secondary);
+            font-size: 10px;
+            font-weight: 700;

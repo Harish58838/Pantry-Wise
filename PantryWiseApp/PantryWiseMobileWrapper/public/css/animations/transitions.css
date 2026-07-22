@@ -1,0 +1,124 @@
+            flex-direction: column;
+            overflow-x: hidden;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--surface-2);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        /* ==========================================================================
+           3. ONBOARDING & AUTHENTICATION OVERLAY
+           ========================================================================== */
+        .auth-view-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-main);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .auth-card-frame {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-3);
+            width: 100%;
+            max-width: 420px;
+            padding: 40px 32px 32px 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .auth-card-frame::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), #3B82F6);
+            z-index: 10;
+        }
+
+        /* GORGEOUS WIDESCREEN DESKTOP SPLIT LAYOUT STYLES */
+        .auth-desktop-brand-hero {
+            display: none;
+        }
+
+        .auth-right-content-frame {
+            display: contents;
+            /* fallback matches normal flow on mobile */
+        }
+
+        @media (min-width: 992px) {
+            .auth-view-overlay {
+                padding: 0;
+                background: #0F172A;
+            }
+
+            .auth-card-frame {
+                max-width: 100vw;
+                width: 100vw;
+                height: 100vh;
+                border-radius: 0;
+                border: none;
+                display: grid !important;
+                grid-template-columns: 1.25fr 1fr;
+                padding: 0;
+                box-shadow: none;
+                gap: 0 !important;
+                background: #0f172a;
+            }
+
+            .auth-card-frame::before {
+                display: none;
+                /* remove small accent stripe on full screen */
+            }
+
+            .auth-desktop-brand-hero {
+                display: flex !important;
+                flex-direction: column;
+                justify-content: center;
+                background: linear-gradient(135deg, #0b1528 0%, #0c7552 100%);
+                padding: 80px 100px;
+                position: relative;
+                overflow: hidden;
+                border-right: 1px solid rgba(255, 255, 255, 0.08);
+            }
+
+            .auth-hero-glow-bubble {
+                position: absolute;
+                top: -20%;
+                right: -20%;
+                width: 500px;
+                height: 500px;
+                border-radius: 50%;
+                background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, transparent 70%);
+                filter: blur(50px);

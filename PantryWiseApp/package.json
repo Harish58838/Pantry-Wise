@@ -1,0 +1,12 @@
+{
+  "name": "pantrywiseapp",
+  "version": "1.0.0",
+  "description": "PantryWise - Smart Pantry & Family Hub",
+  "main": "index.html",
+  "scripts": {
+    "start": "echo \"Open index.html in a browser or use a live server\" && exit 0"
+  },
+  "keywords": ["pantry", "inventory", "family"],
+  "author": "Harish",
+  "license": "ISC"
+}

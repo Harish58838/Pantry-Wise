@@ -1,0 +1,133 @@
+            cursor: pointer;
+            width: 60px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .mobile-nav-btn i {
+            font-size: 20px;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s, filter 0.3s;
+        }
+
+        .mobile-nav-btn.active {
+            color: var(--primary);
+        }
+
+        .mobile-nav-btn.active i {
+            transform: translateY(-4px) scale(1.18);
+            color: var(--primary);
+            filter: drop-shadow(0 0 6px rgba(var(--primary-rgb), 0.6));
+        }
+
+        .mobile-barcode-fab {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-full);
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: var(--shadow-3);
+            border: 4px solid var(--surface);
+            transform: translateY(-20px);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .mobile-barcode-fab:active {
+            transform: translateY(-20px) scale(0.9);
+        }
+
+        /* ==========================================================================
+           5. SHARED APP DISPLAY MODULE VIEWS
+           ========================================================================== */
+        .app-view-panel {
+            padding: 24px;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            display: none;
+            animation: panelFadeIn 0.3s ease-in-out;
+        }
+
+        .app-view-panel.active-panel {
+            display: block;
+        }
+
+        @keyframes panelFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Grids & Cards Components */
+        .responsive-dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .app-premium-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            padding: 20px;
+            box-shadow: var(--shadow-1);
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-premium-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-2);
+        }
+
+        .card-header-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+                grid-template-columns: 1fr;
+            }
+            .app-premium-card {
+                grid-column: 1 / -1 !important;
+            }
+        }
+
+        /* --- Shopping Completion Progress --- */
+        .shopping-progress-banner {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 20px;
+            border-radius: var(--radius-md);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .progress-ring-mini {
+            position: relative;
+            width: 52px;
+            height: 52px;
+            flex-shrink: 0;
+        }
+
+        .progress-ring-mini svg {
+            transform: rotate(-90deg);
+            width: 52px;
+            height: 52px;
+        }
+
+        .progress-ring-mini .ring-text {

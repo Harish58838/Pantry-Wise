@@ -1,0 +1,133 @@
+            color: var(--success);
+        }
+
+        .kpi-trend.down {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        /* --- IoT Sensor Display --- */
+        .sensor-display {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+        }
+
+        .sensor-display .sensor-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .sensor-display .sensor-value {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        .sensor-display .sensor-label {
+            font-size: 10.5px;
+            color: var(--text-secondary);
+        }
+
+        /* --- Floating Help FAB --- */
+        .floating-help-fab {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), #3B82F6);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(var(--primary-rgb), 0.4);
+            z-index: 900;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
+        }
+
+        .floating-help-fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 28px rgba(var(--primary-rgb), 0.55);
+        }
+
+        .floating-help-fab:active {
+            transform: scale(0.95);
+        }
+
+        @media (max-width: 768px) {
+            .floating-help-fab {
+                bottom: 110px;
+                right: 16px;
+                width: 46px;
+                height: 46px;
+                font-size: 18px;
+            }
+            .responsive-dashboard-grid {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background: var(--surface-2);
+        }
+
+        /* Gauge progress ring */
+        .gauge-ring-container {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gauge-svg {
+            transform: rotate(-90deg);
+            width: 80px;
+            height: 80px;
+        }
+
+        .gauge-bg-circle {
+            fill: none;
+            stroke: var(--surface-2);
+            stroke-width: 8px;
+        }
+
+        .gauge-fill-circle {
+            fill: none;
+            stroke: var(--primary);
+            stroke-width: 8px;
+            stroke-linecap: round;
+            stroke-dasharray: 201;
+            /* 2 * PI * 32 */
+            stroke-dashoffset: 201;
+            transition: stroke-dashoffset 0.8s ease-in-out;
+        }
+
+        .gauge-text {
+            position: absolute;
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 16px;
+            color: var(--text-primary);
+        }
+
+        /* Buttons & Forms Components */
+        .app-btn {
+            font-family: var(--font-main);
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;

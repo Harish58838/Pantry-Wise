@@ -1,0 +1,133 @@
+            color: var(--text-secondary);
+            transition: color 0.2s;
+        }
+
+        .notification-bell:hover {
+            color: var(--text-primary);
+        }
+
+        .notification-bell .bell-badge {
+            position: absolute;
+            top: -4px;
+            right: -6px;
+            min-width: 16px;
+            height: 16px;
+            border-radius: 99px;
+            background: var(--danger);
+            color: white;
+            font-size: 9px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            border: 2px solid var(--surface);
+            animation: bellPulse 2s infinite;
+        }
+
+        @keyframes bellPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.15);
+            }
+        }
+
+        /* --- Activity Timeline --- */
+        .activity-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 14px;
+            padding: 12px 0;
+            position: relative;
+        }
+
+        .timeline-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 38px;
+            bottom: -2px;
+            width: 2px;
+            background: var(--border);
+        }
+
+        .timeline-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            flex-shrink: 0;
+            z-index: 2;
+        }
+
+        .timeline-item .timeline-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 18px;
+        }
+
+        .timeline-item .timeline-text strong {
+            color: var(--text-primary);
+        }
+
+        .timeline-item .timeline-time {
+            font-size: 10.5px;
+            color: var(--text-secondary);
+            opacity: 0.7;
+            margin-top: 2px;
+            display: block;
+        }
+
+        /* --- About/Version Card --- */
+        .about-version-card {
+            text-align: center;
+            padding: 32px 24px;
+        }
+
+        .about-version-card .version-logo {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            background: rgba(var(--primary-rgb), 0.1);
+
+        .overlay-modal-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-3);
+            width: 100%;
+            max-width: 460px;
+            padding: 24px;
+            animation: modalAppear 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes modalAppear {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Confetti overlay canvas */
+        #confetti-celebrate-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;

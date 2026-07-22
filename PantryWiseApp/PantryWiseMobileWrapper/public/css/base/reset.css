@@ -1,0 +1,133 @@
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .cmd-option:hover {
+            background: var(--surface-2);
+        }
+
+        .cmd-badge {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 3px 8px;
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--text-secondary);
+        }
+
+        /* --- Quick Actions Bar --- */
+        .quick-actions-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 24px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .quick-action-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: var(--radius-md);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-size: 12.5px;
+            font-weight: 700;
+            color: var(--text-primary);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+            font-family: var(--font-main);
+        }
+
+        .quick-action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-2);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .quick-action-btn i {
+            font-size: 14px;
+        }
+
+        /* --- Inventory Summary Bar --- */
+        .inventory-summary-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .inv-summary-chip {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: var(--radius-full);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-secondary);
+        }
+
+        .inv-summary-chip .chip-count {
+            font-family: var(--font-display);
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        /* --- Analytics KPI Cards --- */
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .kpi-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 18px;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-2);
+        }
+
+        .kpi-card .kpi-value {
+            font-family: var(--font-display);
+            font-weight: 900;
+            font-size: 28px;
+            display: block;
+            line-height: 1;
+        }
+
+        .kpi-card .kpi-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-top: 4px;
+            display: block;
+        }
+
+        .kpi-card .kpi-trend {
+            font-size: 10px;
+            font-weight: 800;
+            margin-top: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+
+        .kpi-trend.up {
+            background: rgba(16, 185, 129, 0.1);

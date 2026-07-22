@@ -1,3 +1,7 @@
 node_modules/
 .expo/
 *.zip
+*.csv
+Me.jpeg
+Vulnerability Test Results/
+.vscode/

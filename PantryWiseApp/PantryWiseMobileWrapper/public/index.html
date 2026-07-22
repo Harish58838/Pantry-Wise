@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description"
+        content="PantryWise — Full-featured real-world smart inventory, shopping checklists, family sync, and AI insights dashboard.">
+    <title>PantryWise — Smart Pantry & Family Hub</title>
+    <link rel="stylesheet" href="css/base/reset.css">
+    <link rel="stylesheet" href="css/base/typography.css">
+    <link rel="stylesheet" href="css/base/variables.css">
+    <link rel="stylesheet" href="css/base/theme.css">
+    <link rel="stylesheet" href="css/components/buttons.css">
+    <link rel="stylesheet" href="css/components/cards.css">
+    <link rel="stylesheet" href="css/components/grids.css">
+    <link rel="stylesheet" href="css/components/badges.css">
+    <link rel="stylesheet" href="css/components/gauges.css">
+    <link rel="stylesheet" href="css/views/auth-view.css">
+    <link rel="stylesheet" href="css/views/dashboard-view.css">
+    <link rel="stylesheet" href="css/views/pantry-view.css">
+    <link rel="stylesheet" href="css/views/list-view.css">
+    <link rel="stylesheet" href="css/views/settings.css">
+    <link rel="stylesheet" href="css/animations/keyframes.css">
+    <link rel="stylesheet" href="css/animations/transitions.css">
+
+    <!-- Google Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    
+
+    <!-- Premium Data Visualizations Engine -->
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <!-- Supabase SDK (defer so it doesn't block page load) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+</head>
+
+<body style="overflow: hidden;">
+
+    <!-- GORGEOUS PREMIUM SPLASH SCREEN OVERLAY -->
+    <div id="appSplashScreenOverlay" class="splash-screen-overlay">
+        <div class="splash-content-box">
+            <div class="splash-logo-circle">
+                <i class="fa-solid fa-leaf splash-logo-icon"></i>
+            </div>
+            <h1 class="splash-brand-title">PantryWise</h1>
+            <p class="splash-tagline">Initializing Smart Inventory OS...</p>
+
+            <div class="splash-progress-track">
+                <div id="splashProgressIndicator" class="splash-progress-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="confetti-celebrate-canvas"></canvas>
+
+    <!-- Success and warnings Toast popups -->
+    <div class="toast-popup" id="systemToast">
+        <i class="fa-solid fa-circle-check" style="color:var(--primary); font-size:20px;"></i>
+        <div>
+            <strong id="toastTitle" style="font-size:13.5px; display:block;">Action Success</strong>
+            <span id="toastDesc" style="font-size:11px; color:var(--text-secondary);">State synched successfully.</span>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+       COMMAND PALETTE OVERLAY (WAVE 3 ENTERPRISE)
+       ========================================================================== -->
+    <div class="command-palette-overlay" id="commandPaletteOverlay" onclick="closeCommandPalette(event)">
+        <div class="command-palette-modal" onclick="event.stopPropagation()">
+            <div class="cmd-palette-header">
+                <i class="fa-solid fa-magnifying-glass" style="color:var(--primary); font-size:18px;"></i>
+                <input type="text" id="cmdPaletteInput" placeholder="What do you need?"
+                    onkeyup="executeCommandSearch(event)">
+                <div class="cmd-badge">ESC</div>
+            </div>
+            <div class="cmd-palette-body">
+                <div class="cmd-section-title">Quick Actions</div>
+                <div class="cmd-option" onclick="routeToView('pantry'); closeCommandPalette();">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <i class="fa-solid fa-box-open" style="color:var(--text-secondary); font-size:16px;"></i>
+                        <span>View Pantry Inventory</span>
+                    </div>
+                    <div class="cmd-badge">G</div>
+                </div>
+                <div class="cmd-option" onclick="routeToView('shopping'); closeCommandPalette();">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <i class="fa-solid fa-basket-shopping" style="color:var(--text-secondary); font-size:16px;"></i>
+                        <span>Open Shopping List</span>
+                    </div>
+                    <div class="cmd-badge">S</div>
+                </div>
+                <div class="cmd-option" onclick="openAddPantryItemModal(); closeCommandPalette();">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <i class="fa-solid fa-plus" style="color:var(--primary); font-size:16px;"></i>
+                        <span>Add New Product</span>
+                    </div>
+                    <div class="cmd-badge">N</div>
+                </div>
+
+                <div class="cmd-section-title" style="margin-top:16px;">AI Assistant</div>
+                <div class="cmd-option"
+                    onclick="routeToView('settings'); closeCommandPalette(); document.getElementById('pantryBotCmdInput').focus();">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <i class="fa-solid fa-wand-magic-sparkles" style="color:var(--accent); font-size:16px;"></i>
+                        <span>Ask PantryBot AI...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+       AUTHENTICATION FLOW (ONBOARDING, LOGIN, OTP SLIDES OVERLAY)
+       ========================================================================== -->
+    <section class="auth-view-overlay" id="appAuthView">
+        <div class="auth-card-frame">
+
+            <!-- Sleek Desktop Left-side Branding Showcase Hero Column -->
+            <div class="auth-desktop-brand-hero">
+                <div class="auth-hero-glow-bubble"></div>
+                <div
+                    style="z-index:10; display:flex; flex-direction:column; gap:24px; max-width:460px; text-align:left;">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <div
+                            style="width:48px; height:48px; border-radius:12px; background:rgba(255,255,255,0.12); display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,0.18);">
+                            <i class="fa-solid fa-leaf" style="font-size:22px; color:#34D399;"></i>
+                        </div>
+                        <span
+                            style="font-family:var(--font-display); font-weight:900; font-size:26px; color:#FFFFFF; letter-spacing:-0.5px;">PantryWise
+                            OS</span>
+                    </div>
+
+                    <div style="margin-top:20px;">
+                        <h1
+                            style="font-family:var(--font-display); font-weight:800; font-size:38px; color:#FFFFFF; line-height:48px; margin:0; letter-spacing:-0.5px;">
+                            The smartest way to govern your household storage.
+                        </h1>
+                        <p style="color:rgba(241, 245, 249, 0.75); font-size:15px; line-height:24px; margin-top:16px;">
+                            Seamlessly coordinate real-time grocery expiries, auto-build predictive family checklists,
+                            and optimize sustainability with intelligent analytics.
+                        </p>
+                    </div>
+
+                    <!-- AI predictive feature highlight snippet badge -->
+                    <div
+                        style="margin-top:24px; padding:18px; border-radius:16px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); display:flex; align-items:center; gap:16px; box-shadow:var(--shadow-1);">
+                        <div
+                            style="width:40px; height:40px; border-radius:50%; background:rgba(251, 191, 36, 0.15); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                            <i class="fa-solid fa-wand-magic-sparkles" style="font-size:18px; color:#FBBF24;"></i>
+                        </div>
+                        <div>
+                            <strong style="color:#FFFFFF; font-size:13.5px; display:block; font-weight:700;">PantryBot
+                                Predictive Agent</strong>
+                            <span
+                                style="color:rgba(241, 245, 249, 0.6); font-size:11.5px; display:block; margin-top:2px;">Assigned
+                                metrics scanning. Expiry predictions calibrated.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dynamic Right-side Content Frame for authStages -->
+            <div class="auth-right-content-frame">
+                <div class="auth-right-glow-bubble"></div>
+
+                <!-- Onboarding Stage 1 (Screen 2) -->
+                <div class="auth-slider-stage active-stage" id="authStage-1">
+                    <div class="auth-icon-wrapper">
+                        <i class="fa-solid fa-basket-shopping" style="font-size:38px; color:var(--primary);"></i>
+                    </div>
+                    <h2 style="font-family:var(--font-display); font-weight:800; font-size:24px;">Track Everything</h2>
+                    <p style="color:var(--text-secondary); font-size:14px; line-height:22px;">Manage food, fridge
+                        layers, storage categories, and item volumes effortlessly in unified databases.</p>
+                    <button class="app-btn app-btn-primary app-btn-lg" style="width:100%;"
+                        onclick="navigateAuthStage(2)">Next Slide</button>
+                    <div class="dots-group">
+                        <span class="dot-indicator active"></span>
+                        <span class="dot-indicator"></span>
+                        <span class="dot-indicator"></span>
+                    </div>
+                </div>
+
+                <!-- Onboarding Stage 2 (Screen 3) -->
+                <div class="auth-slider-stage" id="authStage-2">
+                    <div class="auth-icon-wrapper"
+                        style="background:rgba(var(--accent-rgb), 0.08); border-color:rgba(var(--accent-rgb), 0.35);">
+                        <i class="fa-solid fa-calendar-xmark" style="font-size:38px; color:var(--accent);"></i>
+                    </div>
+                    <h2 style="font-family:var(--font-display); font-weight:800; font-size:24px;">Zero Food Waste</h2>
+                    <p style="color:var(--text-secondary); font-size:14px; line-height:22px;">Receive real-time
+                        notifications on impending product expiries. Cook recipes matched with what you own.</p>
+                    <button class="app-btn app-btn-primary app-btn-lg" style="width:100%;"
+                        onclick="navigateAuthStage(3)">Next Slide</button>
+                    <div class="dots-group">
+                        <span class="dot-indicator"></span>
+                        <span class="dot-indicator active"></span>
+                        <span class="dot-indicator"></span>
+                    </div>
+                </div>
+
+                <!-- Onboarding Stage 3 (Screen 4) -->
+                <div class="auth-slider-stage" id="authStage-3">
+                    <div class="auth-icon-wrapper"
+                        style="background:rgba(59, 130, 246, 0.08); border-color:rgba(59, 130, 246, 0.35);">
+                        <i class="fa-solid fa-people-roof" style="font-size:38px; color:var(--info);"></i>
+                    </div>
+                    <h2 style="font-family:var(--font-display); font-weight:800; font-size:24px;">Family Sync Hub</h2>
+                    <p style="color:var(--text-secondary); font-size:14px; line-height:22px;">Sync shopping lists and
+                        checklist completions in real-time across family member profiles.</p>
+                    <button class="app-btn app-btn-primary app-btn-lg" style="width:100%;"
+                        onclick="navigateAuthStage(4)">Let's Cook</button>
+                    <div class="dots-group">
+                        <span class="dot-indicator"></span>
+                        <span class="dot-indicator"></span>
+                        <span class="dot-indicator active"></span>
+                    </div>
+                </div>
+
+                <!-- Welcome Screen (Screen 5) -->
+                <div class="auth-slider-stage" id="authStage-4">
+                    <div class="auth-icon-wrapper">
+                        <i class="fa-solid fa-leaf" style="font-size:38px; color:var(--primary);"></i>
+                    </div>
+                    <h2 style="font-family:var(--font-display); font-weight:900; font-size:26px;">PantryWise OS</h2>
+                    <p style="color:var(--text-secondary); font-size:13px;">Enterprise Smart Household Storage
+                        Management</p>
+
+                    <div style="width:100%; display:flex; flex-direction:column; gap:12px; margin-top:20px;">
+                        <button class="app-btn app-btn-primary app-btn-lg" style="width:100%;"
+                            onclick="navigateAuthStage(5)">Sign In</button>
+                        <button class="app-btn app-btn-secondary app-btn-lg" style="width:100%;"
+                            onclick="navigateAuthStage(6)">Create Account</button>
+                    </div>
+                </div>
+
+                <!-- Login Screen (Screen 6) -->
+                <div class="auth-slider-stage" id="authStage-5" style="align-items:stretch; text-align:left;">
+                    <h3 style="font-family:var(--font-display); font-size:20px; font-weight:800; text-align:center;">
+                        Welcome Back</h3>
+                    <div style="display:flex; flex-direction:column; gap:12px; margin-top:10px;">
+                        <div>
+                            <label
+                                style="font-size:11px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:4px;">Email</label>
+                            <input type="email" id="loginEmailInput" placeholder="Enter your email...">
+                        </div>
+                        <div>
+                            <label
+                                style="font-size:11px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:4px;">Password</label>
+                            <input type="password" id="loginPassInput" placeholder="••••••••••••">
+                        </div>
+                    </div>
+                    <div
+                        style="display:flex; justify-content:space-between; font-size:11px; font-weight:700; margin-top:8px;">
+                        <span style="color:var(--primary); cursor:pointer;" onclick="navigateAuthStage(8)">Forgot
+                            Password?</span>
+                        <span style="color:var(--text-secondary); cursor:pointer;"
+                            onclick="triggerBiometricBypass()">FaceID Biometrics</span>
+                    </div>
+                    <button class="app-btn app-btn-primary app-btn-lg" style="margin-top:20px;"
+                        onclick="completeAppLogin()">Sign In</button>
+                </div>
+
+                <!-- Sign Up Screen (Screen 7) -->
+                <div class="auth-slider-stage" id="authStage-6" style="align-items:stretch; text-align:left;">
+                    <h3 style="font-family:var(--font-display); font-size:20px; font-weight:800; text-align:center;">
+                        Create Household</h3>
+                    <div style="display:flex; flex-direction:column; gap:12px; margin-top:10px;">
+                        <div>
+                            <label style="font-size:11px; font-weight:700; display:block; margin-bottom:4px;">Admin
+                                Name</label>
+                            <input type="text" id="signupName" placeholder="e.g., Harish">
+                        </div>
+                        <div>
+                            <label style="font-size:11px; font-weight:700; display:block; margin-bottom:4px;">Email
+                                Address</label>
+                            <input type="email" id="signupEmail" placeholder="name@domain.com">
+                        </div>
+                        <div>
+                            <label
+                                style="font-size:11px; font-weight:700; display:block; margin-bottom:4px;">Password</label>
+                            <input type="password" id="signupPass" placeholder="••••••••••••">
+                        </div>
+                    </div>
+                    <button class="app-btn app-btn-primary app-btn-lg" style="margin-top:20px;"
+                        onclick="completeAppSignup()">Create Account</button>
+                </div>
+
+                <!-- OTP Verification Screen (Screen 8) -->
+                <div class="auth-slider-stage" id="authStage-7">
+                    <h3 style="font-family:var(--font-display); font-weight:800;">Verify OTP Pin</h3>
+                    <p style="color:var(--text-secondary); font-size:12px;">Sent to your registered email logs</p>
+                    <div class="otp-inputs-row">
+                        <input type="text" class="otp-box" value="4" maxlength="1">
+                        <input type="text" class="otp-box" value="8" maxlength="1">
+                        <input type="text" class="otp-box" value="9" maxlength="1">
+                        <input type="text" class="otp-box" value="2" maxlength="1">
+                    </div>
+                    <button class="app-btn app-btn-primary app-btn-lg" style="width:100%; margin-top:20px;"
+                        onclick="completeAppLogin()">Complete Registration</button>
+                </div>
+
+                <!-- Forgot Password Screen (Screen 9) -->
+                <div class="auth-slider-stage" id="authStage-8" style="align-items:stretch; text-align:left;">
+                    <h3 style="text-align:center;">Recover Credentials</h3>
+                    <div style="margin-top:10px;">
+                        <label style="font-size:11px; font-weight:700; display:block; margin-bottom:4px;">Registered
+                            Email</label>
+                        <input type="email" value="" placeholder="Enter your email" id="recoverEmailInput">
+                    </div>
+                    <button class="app-btn app-btn-primary app-btn-lg" style="margin-top:20px;"
+                        onclick="sendPasswordResetEmail()">Dispatch Reset Token</button>
+                </div>
+
+                <!-- Reset Password Screen (Screen 10) -->
+                <div class="auth-slider-stage" id="authStage-9" style="align-items:stretch; text-align:left;">
+                    <h3>Assign New Passcode</h3>
+                    <div style="display:flex; flex-direction:column; gap:12px; margin-top:10px;">
+                        <div>
+                            <label style="font-size:11px; font-weight:700; display:block; margin-bottom:4px;">New
+                                Password</label>
+                            <input type="password" placeholder="••••••••••••" id="newPasscodeInput">
+                        </div>
+                    </div>
+                    <button class="app-btn app-btn-primary app-btn-lg" style="margin-top:20px;"
+                        onclick="saveNewPassword()">Save and Sign In</button>
+                </div>
+
+                <!-- Reset Password OTP Screen -->
+                <div class="auth-slider-stage" id="authStage-10">
+                    <h3 style="font-family:var(--font-display); font-weight:800;">Verify Reset OTP</h3>
+                    <p style="color:var(--text-secondary); font-size:12px;">Sent to your email</p>
+                    <div style="margin-top:10px;">
+                        <input type="text" placeholder="Enter OTP (e.g. 1234)" id="resetOtpInput"
+                            style="text-align:center; letter-spacing:4px; font-weight:bold; width:100%; height:48px; border-radius:var(--radius-sm); border:1px solid var(--border);">
+                    </div>
+                    <button class="app-btn app-btn-primary app-btn-lg" style="width:100%; margin-top:20px;"
+                        onclick="verifyResetOTP()">Verify Code</button>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ==========================================================================
+       MAIN SYSTEM APPLICATION LAYOUT
+       ========================================================================== -->
+    <div class="application-layout">
+
+        <!-- DESKTOP LEFT SIDEBAR NAVIGATION -->
+        <aside class="sidebar-navigation">
+            <div class="sidebar-brand-box">
+                <i class="fa-solid fa-leaf" style="font-size:26px; color:var(--primary);"></i>
+                <span class="brand-text-display">PantryWise</span>
+                <span class="sidebar-pro-badge">PRO</span>
+            </div>
+
+            <nav class="sidebar-nav-menu">
+                <div class="nav-menu-item active" id="deskNav-dashboard" onclick="routeToView('dashboard')">
+                    <i class="fa-solid fa-house"></i> <span>Dashboard Home</span>
+                </div>
+                <div class="nav-menu-item" id="deskNav-pantry" onclick="routeToView('pantry')">
+                    <i class="fa-solid fa-boxes-stacked"></i> <span>Smart Pantry</span>
+                </div>
+                <div class="nav-menu-item" id="deskNav-shopping" onclick="routeToView('shopping')">
+                    <i class="fa-solid fa-basket-shopping"></i> <span>Shopping List</span>
+                </div>
+                <div class="nav-menu-item" id="deskNav-analytics" onclick="routeToView('analytics')">
+                    <i class="fa-solid fa-chart-pie"></i> <span>Insights Panel</span>
+                </div>
+                <div class="nav-menu-item" id="deskNav-fridge" onclick="routeToView('fridge')">
+                    <i class="fa-solid fa-temperature-empty"></i> <span>Connected IoT Fridge</span>
+                </div>
+                <div class="nav-menu-item" id="deskNav-family" onclick="routeToView('family')">
+                    <i class="fa-solid fa-people-roof"></i> <span>Family Sync Hub</span>
+                </div>
+                <div class="nav-menu-item" id="deskNav-settings" onclick="routeToView('settings')">
+                    <i class="fa-solid fa-gears"></i> <span>System Settings</span>
+                </div>
+                <div class="nav-menu-item" style="color:var(--danger); margin-top:auto; font-weight:700;"
+                    onclick="performSystemLogout()">
+                    <i class="fa-solid fa-right-from-bracket"></i> <span>Sign Out</span>
+                </div>
+            </nav>
+
+            <div class="sidebar-nav-footer">
+                <div
+                    style="font-size:22px; width:38px; height:38px; border-radius:50%; background:var(--surface-2); display:flex; align-items:center; justify-content:center; position:relative;">
+                    👩‍🍳
+                    <span class="status-dot online"
+                        style="position:absolute; bottom:0; right:-2px; border:2px solid var(--surface);"></span>
+                </div>
+                <div>
+                    <strong style="font-size:13px; display:block;" id="currentUserLabel">Sarah Johnson</strong>
+                    <span style="font-size:10.5px; color:var(--text-secondary);"><span
+                            class="status-dot online"></span>Online · Admin</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- UNIVERSAL WORKSPACE HUB VIEWPORT -->
+        <main class="workspace-hub">
+
+            <!-- HEADER -->
+            <header class="hub-header">
+                <div class="header-left-side">
+                    <div class="brand-mobile-trigger">
+                        <i class="fa-solid fa-leaf" style="font-size:22px; color:var(--primary);"></i>
+                        <strong style="font-family:var(--font-display); font-size:18px;">PantryWise</strong>
+                    </div>
+
+                    <!-- Global Command Search Bar (Wave 3) -->
+                    <div class="global-search-container" onclick="openCommandPalette()">
+                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                        <span style="color:var(--text-secondary); font-size:13px; font-weight:600;">Search inventory,
+                            recipes, or ask AI...</span>
+                        <div class="search-shortcut-hint">
+                            <span>⌘</span><span>K</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-right-side">
+                    <div class="notification-bell"
+                        onclick="showSystemToast('Notifications', '2 items expiring soon · 1 checklist update')">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="bell-badge">2</span>
+                    </div>
+                    <button class="app-btn app-btn-secondary app-btn-sm" onclick="toggleGlobalAppearanceTheme()"><i
+                            class="fa-solid fa-circle-half-stroke"></i></button>
+                    <button class="app-btn app-btn-secondary app-btn-sm"
+                        style="color:var(--danger); border-color:rgba(239, 68, 68, 0.25);"
+                        onclick="performSystemLogout()" title="Sign Out"><i
+                            class="fa-solid fa-right-from-bracket"></i></button>
+                    <div style="font-size:22px; cursor:pointer;" onclick="routeToView('settings')">⚙️</div>
+                </div>
+            </header>
+
+            <!-- ==========================================================================
+               VIEW 1: SYSTEM HOME DASHBOARD
+               ========================================================================== -->
+            <section class="app-view-panel active-panel" id="view-dashboard">
+
+                <!-- Premium Welcome Banner -->
+                <div class="welcome-banner">
+                    <h1>Good evening, Sarah 👋</h1>
+                    <p>Your household pantry is 88% fresh. 2 items need attention before they expire.</p>
+                    <div class="banner-date">
+                        <i class="fa-solid fa-calendar-day"></i>
+                        <span id="dashboardDateDisplay">Wednesday, May 21 2026</span>
+                    </div>
+                </div>
+
+                <!-- Quick Stat Summary Row -->
+                <div class="stat-summary-row" id="dashboardStatRow">
+                    <div class="stat-mini-card">
+                        <div class="stat-icon" style="background:rgba(var(--primary-rgb), 0.12); color:var(--primary);">
+                            <i class="fa-solid fa-boxes-stacked"></i>
+                        </div>
+                        <div>
+                            <span class="stat-value" id="statTotalItems">4</span>
+                            <span class="stat-label">Total Items</span>
+                        </div>
+                    </div>
+                    <div class="stat-mini-card">
+                        <div class="stat-icon" style="background:rgba(239, 68, 68, 0.12); color:var(--danger);">
+                            <i class="fa-solid fa-clock-rotate-left"></i>
+                        </div>
+                        <div>
+                            <span class="stat-value" id="statExpiringItems">2</span>
+                            <span class="stat-label">Expiring Soon</span>
+                        </div>
+                    </div>
+                    <div class="stat-mini-card">
+                        <div class="stat-icon" style="background:rgba(59, 130, 246, 0.12); color:var(--info);">
+                            <i class="fa-solid fa-basket-shopping"></i>
+                        </div>
+                        <div>
+                            <span class="stat-value" id="statShoppingCount">3</span>
+                            <span class="stat-label">Shopping List</span>
+                        </div>
+                    </div>
+                    <div class="stat-mini-card">
+                        <div class="stat-icon" style="background:rgba(251, 191, 36, 0.12); color:var(--accent);">
+                            <i class="fa-solid fa-people-group"></i>
+                        </div>
+                        <div>
+                            <span class="stat-value" id="statFamilyCount">3</span>
+                            <span class="stat-label">Family Members</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions Bar -->
+                <div class="quick-actions-bar">
+                    <button class="quick-action-btn" onclick="openAddPantryItemModal()">
+                        <i class="fa-solid fa-plus" style="color:var(--primary);"></i> Add Item
+                    </button>
+                    <button class="quick-action-btn" onclick="openSimulatedScanner('barcode')">
+                        <i class="fa-solid fa-barcode" style="color:var(--info);"></i> Scan Barcode
+                    </button>
+                    <button class="quick-action-btn" onclick="openSimulatedScanner('ocr')">
+                        <i class="fa-solid fa-receipt" style="color:var(--accent);"></i> OCR Receipt
+                    </button>
+                    <button class="quick-action-btn" onclick="routeToView('shopping')">
+                        <i class="fa-solid fa-basket-shopping" style="color:#A855F7;"></i> Shopping List
+                    </button>
+                    <button class="quick-action-btn" onclick="triggerAIShortageChecklistBuilder()">
+                        <i class="fa-solid fa-wand-magic-sparkles" style="color:var(--primary);"></i> AI Restock
+                    </button>
+                </div>
+
+                <div class="responsive-dashboard-grid">
+
+                    <!-- Expiry freshness ring tracker -->
+                    <div class="app-premium-card card-accent-green" style="flex-direction:row; align-items:center;">
+                        <div class="gauge-ring-container">
+                            <svg class="gauge-svg">
+                                <circle class="gauge-bg-circle" cx="40" cy="40" r="32"></circle>
+                                <circle class="gauge-fill-circle" id="dashboardFreshnessCircle" cx="40" cy="40" r="32">
+                                </circle>
+                            </svg>
+                            <span class="gauge-text" id="dashboardFreshnessVal">88%</span>
+                        </div>
+                        <div>
+                            <strong style="font-family:var(--font-display); font-size:15px;">Freshness Index</strong>
+                            <p style="color:var(--text-secondary); font-size:12px; margin-top:4px;"
+                                id="dashboardFreshnessDesc">Scanning storage indexes. 0 expired products.</p>
+                        </div>
+                    </div>
+
+                    <!-- AI predictive recommendations widgets -->
+                    <div class="app-premium-card card-accent-amber"
+                        style="background:linear-gradient(135deg, rgba(var(--primary-rgb), 0.1), transparent); border-color:rgba(var(--primary-rgb), 0.15);">
+                        <div style="display:flex; gap:12px;">
+                            <i class="fa-solid fa-wand-magic-sparkles"
+                                style="color:var(--primary); font-size:22px;"></i>
+                            <div>
+                                <strong style="font-family:var(--font-display); font-size:14.5px;">AI Smart
+                                    Replenishment</strong>
+                                <p style="color:var(--text-secondary); font-size:12px; margin-top:4px; line-height:16px;"
+                                    id="dashboardSuggestionText">Predicting bread depletes tomorrow. Auto-build list?
+                                </p>
+                                <div style="display:flex; gap:10px; margin-top:12px;">
+                                    <button class="app-btn app-btn-primary app-btn-sm"
+                                        onclick="acceptAIDepletionSuggestion()">Auto-Add</button>
+                                    <button class="app-btn app-btn-ghost app-btn-sm">Dismiss</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Connected IoT Fridge Widget -->
+                    <div class="app-premium-card card-accent-blue" style="cursor:pointer;"
+                        onclick="routeToView('fridge')">
+                        <div style="display:flex; justify-content:space-between; align-items:center; height:100%;">
+                            <div style="display:flex; gap:12px; align-items:center;">
+                                <i class="fa-solid fa-snowflake" style="color:var(--info); font-size:24px;"></i>
+                                <div>
+                                    <strong style="font-family:var(--font-display); font-size:15px;">Smart Connected IoT
+                                        Fridge</strong>
+                                    <p style="color:var(--text-secondary); font-size:11.5px; margin-top:2px;"
+                                        id="dashboardFridgeSensorText">Internal Temp: 37°F · Door Closed</p>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-chevron-right" style="color:var(--text-secondary);"></i>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Expiry heatmaps grid -->
+                <div class="app-premium-card card-accent-red" style="margin-bottom:24px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <strong style="font-family:var(--font-display); font-size:15px;"><i
+                                class="fa-solid fa-calendar-week"></i> 5-Week Expiry Calendar Matrix</strong>
+                        <span style="font-size:11px; color:var(--text-secondary);">Red indicators show expiring
+                            products</span>
+                    </div>
+                    <div class="grid-calendar-expiry" id="dashboardCalendarGrid">
+                        <!-- Plotted dynamically -->
+                    </div>
+                </div>
+
+                <!-- Low Stock warnings list -->
+                <div style="margin-bottom:24px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <strong style="font-family:var(--font-display); font-size:15px;">Critical low quantities
+                            checklist</strong>
+                        <a href="#" style="font-size:12px; font-weight:700;" onclick="routeToView('pantry')">See All
+                            Inventory</a>
+                    </div>
+                    <div style="display:flex; gap:12px; overflow-x:auto; padding-bottom:8px;"
+                        id="dashboardLowStockScroll">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Live weekly trend charts -->
+                <div class="app-premium-card card-accent-blue">
+                    <strong style="font-family:var(--font-display); font-size:15px;">Weekly Consumption & Waste
+                        Ratio</strong>
+                    <div style="position:relative; height:220px; width:100%;">
+                        <canvas id="dashboardWeeklyLineCanvas"></canvas>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- ==========================================================================
+               VIEW 2: SMART PANTRY INVENTORY
+               ========================================================================== -->
+            <section class="app-view-panel" id="view-pantry">
+                <div
+                    style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+                    <div class="view-section-header" style="margin-bottom:0;">
+                        <div class="section-icon-badge"
+                            style="background:rgba(var(--primary-rgb), 0.1); color:var(--primary);">
+                            <i class="fa-solid fa-boxes-stacked"></i>
+                        </div>
+                        <div>
+                            <h2>Smart Pantry Storage</h2>
+                            <p>Manage items inside Fridge, Pantry cabinets, and Freezer drawers. Click any name to edit.
+                            </p>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:8px;">
+                        <button class="app-btn app-btn-secondary app-btn-md" onclick="openSimulatedScanner('ocr')"><i
+                                class="fa-solid fa-receipt"></i> OCR Scan</button>
+                        <button class="app-btn app-btn-primary app-btn-md" onclick="openAddPantryItemModal()">+ Add
+                            Product</button>
+                    </div>
+                </div>
+
+                <!-- Inventory Summary Bar -->
+                <div class="inventory-summary-bar" id="pantrySummaryBar">
+                    <div class="inv-summary-chip">
+                        <i class="fa-solid fa-cubes" style="color:var(--primary); font-size:12px;"></i>
+                        <span class="chip-count" id="summaryTotal">4</span> Total Products
+                    </div>
+                    <div class="inv-summary-chip">
+                        <span style="font-size:13px;">❄️</span>
+                        <span class="chip-count" id="summaryFridge">2</span> Fridge
+                    </div>
+                    <div class="inv-summary-chip">
+                        <span style="font-size:13px;">🍞</span>
+                        <span class="chip-count" id="summaryPantry">1</span> Pantry
+                    </div>
+                    <div class="inv-summary-chip">
+                        <span style="font-size:13px;">🍏</span>
+                        <span class="chip-count" id="summaryCounter">1</span> Counter
+                    </div>
+                </div>
+
+                <!-- Search & Filters Toggles -->
+                <div style="display:grid; grid-template-columns: 2fr 1fr; gap:12px; margin-bottom:20px;">
+                    <div style="position:relative;">
+                        <i class="fa-solid fa-magnifying-glass"
+                            style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text-secondary);"></i>
+                        <input type="text" id="pantrySearchBox" placeholder="Search product database..."
+                            style="padding-left:36px;" onkeyup="triggerPantryListReload()">
+                    </div>
+                    <select id="pantryLocationSelect" onchange="triggerPantryListReload()">
+                        <option value="All">All Locations</option>
+                        <option value="Fridge">Fridge ❄️</option>
+                        <option value="Pantry">Pantry 🍞</option>
+                        <option value="Counter">Counter 🍏</option>
+                    </select>
+                </div>
+
+                <div
+                    style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; gap:12px; flex-wrap:wrap;">
+                    <div style="display:flex; gap:8px; overflow-x:auto;">
+                        <span class="chip-button active-chip" id="chip-All" onclick="filterPantryCategory('All')">All
+                            Categories</span>
+                        <span class="chip-button" id="chip-Dairy" onclick="filterPantryCategory('Dairy')">Dairy
+                            🥛</span>
+                        <span class="chip-button" id="chip-Fruits" onclick="filterPantryCategory('Fruits')">Fruits
+                            🍎</span>
+                        <span class="chip-button" id="chip-Bakery" onclick="filterPantryCategory('Bakery')">Bakery
+                            🍞</span>
+                        <span class="chip-button" id="chip-Veggies" onclick="filterPantryCategory('Veggies')">Veggies
+                            🥦</span>
+                    </div>
+                    <div style="display:flex; background:var(--surface-2); border-radius:8px; padding:2px;">
+                        <button class="app-btn app-btn-ghost app-btn-sm" id="layoutGridBtn"
+                            onclick="togglePantryLayout('grid')" style="background:var(--surface);"><i
+                                class="fa-solid fa-grip"></i> Grid</button>
+                        <button class="app-btn app-btn-ghost app-btn-sm" id="layoutListBtn"
+                            onclick="togglePantryLayout('list')"><i class="fa-solid fa-list"></i> List</button>
+                    </div>
+                </div>
+
+                <!-- Products Display Area -->
+                <div id="pantryGridItemsWrapper">
+                    <!-- Dynamic rendering -->
+                </div>
+
+            </section>
+
+            <!-- ==========================================================================
+               VIEW 3: SHOPPING LIST MODULE
+               ========================================================================== -->
+            <section class="app-view-panel" id="view-shopping">
+                <div
+                    style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+                    <div class="view-section-header" style="margin-bottom:0;">
+                        <div class="section-icon-badge" style="background:rgba(59, 130, 246, 0.1); color:var(--info);">
+                            <i class="fa-solid fa-basket-shopping"></i>
+                        </div>
+                        <div>
+                            <h2>Shopping Checklists</h2>
+                            <p>Real-time checkoff sync between family members</p>
+                        </div>
+                    </div>
+                    <button class="app-btn app-btn-primary app-btn-md" onclick="triggerAIShortageChecklistBuilder()"><i
+                            class="fa-solid fa-wand-magic-sparkles"></i> AI Restock</button>
+                </div>
+
+                <!-- Shopping Progress Ring Banner -->
+                <div class="shopping-progress-banner">
+                    <div class="progress-ring-mini">
+                        <svg>
+                            <circle class="gauge-bg-circle" cx="26" cy="26" r="22" stroke-width="6"
+                                style="stroke:var(--surface-2);"></circle>
+                            <circle class="gauge-fill-circle" id="shoppingProgressRing" cx="26" cy="26" r="22"
+                                stroke-width="6"
+                                style="stroke:var(--primary); stroke-dasharray:138; stroke-dashoffset:138;"></circle>
+                        </svg>
+                        <span class="ring-text" id="shoppingProgressText">0%</span>
+                    </div>
+                    <div>
+                        <strong style="font-family:var(--font-display); font-size:16px;">Shopping Completion</strong>
+                        <p style="font-size:11.5px; color:var(--text-secondary); margin-top:2px;"
+                            id="shoppingProgressSubtitle">0 of 0 items checked off today.</p>
+                    </div>
+                </div>
+
+                <div class="responsive-dashboard-grid">
+
+                    <!-- Monthly Spend limits tracker -->
+                    <div class="app-premium-card card-accent-green" style="justify-content:space-between;">
+                        <div>
+                            <strong style="font-family:var(--font-display); font-size:14.5px;">Budget Planning
+                                Control</strong>
+                            <div style="display:flex; align-items:center; gap:6px; margin-top:4px;">
+                                <span style="font-size:12px; color:var(--text-secondary);">Limit:</span>
+                                <input type="number" id="budgetLimitInput" value="200"
+                                    style="width:70px; height:24px; padding:0 4px; font-size:11px; font-weight:800; border-radius:4px;"
+                                    onchange="reloadAppUIRenderers()">
+                            </div>
+                        </div>
+                        <div style="margin-top:12px;">
+                            <div
+                                style="display:flex; justify-content:space-between; font-size:11px; font-weight:800; margin-bottom:4px;">
+                                <span id="budgetSpentText">Spent: $128.40</span>
+                                <span id="budgetPercentText">64%</span>
+                            </div>
+                            <div class="expiry-progress-track"
+                                style="height:6px; background:var(--surface-2); border-radius:4px; overflow:hidden;">
+                                <div class="expiry-progress-thumb" id="budgetLimitMeterBar"
+                                    style="width:64%; height:100%; background:var(--primary); transition: width 0.3s;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Store prices comparisons -->
+                    <div class="app-premium-card card-accent-amber">
+                        <strong style="font-family:var(--font-display); font-size:14.5px;">Cloud Pricing
+                            Comparisons</strong>
+                        <div style="display:flex; flex-direction:column; gap:8px; font-size:12.5px; margin-top:8px;">
+                            <div style="display:flex; justify-content:space-between; font-weight:800;">
+                                <span>Walmart preset</span>
+                                <span style="color:var(--primary); font-weight:900;">$18.42 (Best Match!)</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; color:var(--text-secondary);">
+                                <span>Instacart</span>
+                                <span>$22.10</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Main checklists logs card -->
+                <div class="app-premium-card">
+                    <div style="display:flex; gap:12px; margin-bottom:12px; align-items:center;">
+                        <input type="text" id="addShoppingItemName" placeholder="Add custom grocery item..."
+                            style="flex:1;">
+                        <button class="app-btn app-btn-primary app-btn-md" onclick="saveCustomShoppingItem()">+ Add
+                            Item</button>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:10px; width:100%;"
+                        id="shoppingChecklistContainer">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- ==========================================================================
+               VIEW 4: DETAILED ANALYTICS COMMAND CENTER
+               ========================================================================== -->
+            <section class="app-view-panel" id="view-analytics">
+                <div class="view-section-header">
+                    <div class="section-icon-badge" style="background:rgba(245, 158, 11, 0.1); color:var(--accent);">
+                        <i class="fa-solid fa-chart-pie"></i>
+                    </div>
+                    <div>
+                        <h2>Insights Command Center</h2>
+                        <p>Track spending patterns, waste ratios, and sustainability metrics in real time</p>
+                    </div>
+                </div>
+
+                <!-- Analytics KPI Summary -->
+                <div class="kpi-row">
+                    <div class="kpi-card">
+                        <span class="kpi-value" style="color:var(--primary);">$148</span>
+                        <span class="kpi-label">Monthly Spend</span>
+                        <span class="kpi-trend down"><i class="fa-solid fa-arrow-down"></i> 12% vs last month</span>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-value" style="color:var(--danger);">18%</span>
+                        <span class="kpi-label">Waste Ratio</span>
+                        <span class="kpi-trend down"><i class="fa-solid fa-arrow-down"></i> 4% improved</span>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-value" style="color:var(--info);">26</span>
+                        <span class="kpi-label">Items Tracked</span>
+                        <span class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> 8 this week</span>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-value" style="color:var(--accent);">2.4kg</span>
+                        <span class="kpi-label">Daily Consumption</span>
+                        <span class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> Normal range</span>
+                    </div>
+                </div>
+
+                <div class="responsive-dashboard-grid"
+                    style="grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));">
+
+                    <div class="app-premium-card" style="height:320px;">
+                        <strong style="font-size:14px; font-family:var(--font-display);">Category spend
+                            distribution</strong>
+                        <div style="position:relative; flex:1; height:100%; width:100%;">
+                            <canvas id="chartCategorySpendCanvas"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="app-premium-card" style="height:320px;">
+                        <strong style="font-size:14px; font-family:var(--font-display);">Waste & Sustainability
+                            metrics</strong>
+                        <div style="position:relative; flex:1; height:100%; width:100%;">
+                            <canvas id="chartSustainabilityCanvas"></canvas>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ==========================================================================
+               VIEW 5: CONNECTED IOT SMART FRIDGE
+               ========================================================================== -->
+            <section class="app-view-panel" id="view-fridge">
+                <div class="view-section-header">
+                    <div class="section-icon-badge" style="background:rgba(59, 130, 246, 0.1); color:var(--info);">
+                        <i class="fa-solid fa-temperature-empty"></i>
+                    </div>
+                    <div>
+                        <h2>Connected IoT Smart Fridge</h2>
+                        <p>Monitor temperature sensors, door alerts, and visual shelf contents remotely</p>
+                    </div>
+                </div>
+
+                <div class="responsive-dashboard-grid">
+
+                    <!-- Real-time IoT Sensor Displays -->
+                    <div style="grid-column: 1 / -1; display:flex; gap:16px; margin-bottom:12px; flex-wrap:wrap;">
+                        <div class="sensor-display" style="flex:1;">
+                            <div class="sensor-icon" style="background:rgba(59, 130, 246, 0.15); color:var(--info);"><i
+                                    class="fa-solid fa-temperature-low"></i></div>
+                            <div>
+                                <div class="sensor-value" id="iotSensorTemp">37.2°F</div>
+                                <div class="sensor-label">Zone 1 Core Temp</div>
+                            </div>
+                        </div>
+                        <div class="sensor-display" style="flex:1;">
+                            <div class="sensor-icon" style="background:rgba(16, 185, 129, 0.15); color:var(--success);">
+                                <i class="fa-solid fa-droplet"></i>
+                            </div>
+                            <div>
+                                <div class="sensor-value">45%</div>
+                                <div class="sensor-label">Crisper Humidity</div>
+                            </div>
+                        </div>
+                        <div class="sensor-display" style="flex:1;">
+                            <div class="sensor-icon" style="background:rgba(239, 68, 68, 0.15); color:var(--danger);"><i
+                                    class="fa-solid fa-door-closed"></i></div>
+                            <div>
+                                <div class="sensor-value" id="iotSensorDoor">Closed</div>
+                                <div class="sensor-label">Main Door Status</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Temp Slider controls card -->
+                    <div class="app-premium-card card-accent-blue"
+                        style="display:flex; flex-direction:column; justify-content:space-between;">
+                        <div>
+                            <strong style="font-family:var(--font-display); font-size:15px;"><i
+                                    class="fa-solid fa-temperature-low"></i> Climate Control Drawer</strong>
+                            <div style="margin-top:16px; display:flex; flex-direction:column; gap:12px;">
+                                <div style="display:flex; justify-content:space-between; font-weight:800;">
+                                    <span>Target Temperature</span>
+                                    <span id="fridgeCompartmentTempDisplay">37.0°F</span>
+                                </div>
+                                <input type="range" id="fridgeCompartmentTempSlider" min="32" max="45" value="37"
+                                    step="0.5" oninput="updateFridgeCompartmentTempDisplay(this.value)"
+                                    onchange="setNewFridgeTargetTemp(this.value)">
+
+                                <hr style="border:none; border-bottom:1px solid var(--border); margin:4px 0;">
+
+                                <div class="switch-ds-row">
+                                    <span>Enable Door Alarm (5s)</span>
+                                    <label class="toggle-switch-ds">
+                                        <input type="checkbox" id="fridgeAlarmToggle" checked>
+                                        <span class="slider-switch-bg"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="app-btn app-btn-primary app-btn-lg" style="margin-top:16px; width:100%;"
+                            id="simulateDoorBtn" onclick="toggleFridgeDoorState()">Open Fridge Door</button>
+                    </div>
+
+                    <!-- Live Power Draw Canvas -->
+                    <div class="app-premium-card" style="display:flex; flex-direction:column;">
+                        <strong style="font-family:var(--font-display); font-size:15px; margin-bottom:12px;"><i
+                                class="fa-solid fa-bolt"></i> Live Compressor Power Draw</strong>
+                        <div style="position:relative; flex:1; width:100%; min-height:160px;">
+                            <canvas id="chartIotPowerCanvas"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Virtual Internal Camera live shelf drawer -->
+                    <div class="app-premium-card" style="grid-column: span 2;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <strong style="font-family:var(--font-display); font-size:15px;"><i
+                                    class="fa-solid fa-camera"></i> Live Internal View Camera</strong>
+                            <span class="app-badge app-badge-success" id="cameraStatusBadge">Camera Online</span>
+                        </div>
+                        <div id="fridgeCameraFeedBox"
+                            style="background:#0F172A; border-radius:12px; aspect-ratio:16/9; margin-top:12px; display:flex; flex-direction:column; justify-content:space-between; padding:16px; border:2px solid #1E293B; overflow:hidden; position:relative; transition: background 0.3s;">
+                            <!-- Fridge internal light simulation -->
+                            <div id="fridgeInternalLight"
+                                style="position:absolute; top:-20%; left:50%; transform:translateX(-50%); width:300px; height:300px; background:radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%); border-radius:50%; opacity:0; transition:opacity 0.3s; pointer-events:none;">
+                            </div>
+
+                            <!-- Virtual fridge shelves -->
+                            <div
+                                style="position:absolute; bottom:0; left:0; right:0; height:10px; background:#334155; z-index:2;">
+                            </div>
+                            <div
+                                style="position:absolute; bottom:40%; left:0; right:0; height:4px; background:#475569; z-index:2;">
+                            </div>
+
+                            <div style="display:flex; justify-content:space-around; align-items:flex-end; flex:1; padding-bottom:8px; z-index:3;"
+                                id="fridgeShelfTopItems">
+                                <!-- Top Shelf virtual icons -->
+                            </div>
+                            <div style="display:flex; justify-content:space-around; align-items:flex-end; flex:1; padding-bottom:8px; z-index:3;"
+                                id="fridgeShelfBottomItems">
+                                <!-- Bottom Shelf virtual icons -->
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ==========================================================================
+               VIEW 6: FAMILY HUB & ACCESS RULES CONTROL
+               ========================================================================== -->
+            <section class="app-view-panel" id="view-family">
+                <div
+                    style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+                    <div class="view-section-header" style="margin-bottom:0;">
+                        <div class="section-icon-badge" style="background:rgba(168, 85, 247, 0.1); color:#A855F7;">
+                            <i class="fa-solid fa-people-roof"></i>
+                        </div>
+                        <div>
+                            <h2>Family Member Sync</h2>
+                            <p>Manage household editor permissions and shared access controls</p>
+                        </div>
+                    </div>
+                    <button class="app-btn app-btn-primary app-btn-md" onclick="openInviteFamilyMemberPrompt()">+ Invite
+                        Member</button>
+                </div>
+
+                <div class="responsive-dashboard-grid">
+
+                    <!-- Members list cards -->
+                    <div class="app-premium-card" style="grid-column: span 2;">
+                        <strong style="font-family:var(--font-display); font-size:15px; margin-bottom:12px;">Active
+                            Members Domain</strong>
+                        <div style="display:flex; flex-direction:column; gap:12px;" id="familyListContainer">
+                            <!-- Injected dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Direct permissions toggle matrix -->
+                    <div class="app-premium-card">
+                        <strong style="font-family:var(--font-display); font-size:15px; margin-bottom:12px;">Direct
+                            Permission Controls</strong>
+                        <div style="display:flex; flex-direction:column; gap:12px; font-size:13px;"
+                            id="familyPermissionsControlWrapper">
+                            <!-- Injected dynamically -->
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ==========================================================================
+               VIEW 7: SYSTEM SETTINGS AND PREFERENCES
+               ========================================================================== -->
+            <section class="app-view-panel" id="view-settings">
+                <div class="view-section-header">
+                    <div class="section-icon-badge"
+                        style="background:rgba(var(--secondary-rgb), 0.1); color:var(--text-secondary);">
+                        <i class="fa-solid fa-gears"></i>
+                    </div>
+                    <div>
+                        <h2>System Preferences & Support</h2>
+                        <p>Configure app settings, sync preferences, and get help from PantryBot</p>
+                    </div>
+                </div>
+
+                <div class="responsive-dashboard-grid">
+
+                    <!-- Mobile Advanced Modules Links -->
+                    <div class="app-premium-card card-accent-blue">
+                        <strong style="font-family:var(--font-display); font-size:15px;"><i
+                                class="fa-solid fa-mobile-screen"></i> Advanced Modules</strong>
+                        <p style="color:var(--text-secondary); font-size:12px; margin-top:4px;">Access full desktop
+                            features right from your phone.</p>
+                        <div style="display:flex; flex-direction:column; gap:10px; margin-top:12px;">
+                            <button class="app-btn app-btn-secondary app-btn-md" onclick="routeToView('analytics')"
+                                style="justify-content: flex-start;"><i class="fa-solid fa-chart-pie"
+                                    style="color:var(--accent); width:24px; text-align:center;"></i> Insights
+                                Panel</button>
+                            <button class="app-btn app-btn-secondary app-btn-md" onclick="routeToView('fridge')"
+                                style="justify-content: flex-start;"><i class="fa-solid fa-temperature-empty"
+                                    style="color:var(--info); width:24px; text-align:center;"></i> Connected IoT
+                                Fridge</button>
+                            <button class="app-btn app-btn-secondary app-btn-md" onclick="routeToView('family')"
+                                style="justify-content: flex-start;"><i class="fa-solid fa-people-roof"
+                                    style="color:#A855F7; width:24px; text-align:center;"></i> Family Sync Hub</button>
+                        </div>
+                    </div>
+
+                    <!-- Standard options lists -->
+                    <div class="app-premium-card card-accent-amber">
+                        <strong style="font-family:var(--font-display); font-size:15px;"><i
+                                class="fa-solid fa-sliders"></i> Preferences Configuration</strong>
+                        <div style="display:flex; flex-direction:column; gap:10px; font-size:13.5px; margin-top:8px;">
+
+                            <div class="switch-ds-row">
+                                <span>Appearance Dark mode</span>
+                                <label class="toggle-switch-ds">
+                                    <input type="checkbox" id="settingsDarkModeToggle"
+                                        onchange="toggleGlobalAppearanceTheme()">
+                                    <span class="slider-switch-bg"></span>
+                                </label>
+                            </div>
+
+                            <hr style="border:none; border-bottom:1px solid var(--border);">
+
+                            <div class="switch-ds-row">
+                                <span><i class="fa-solid fa-bell"
+                                        style="margin-right:6px; font-size:12px; color:var(--accent);"></i> Expiry
+                                    Alerts</span>
+                                <label class="toggle-switch-ds">
+                                    <input type="checkbox" checked
+                                        onchange="showSystemToast('Alerts', 'Expiry notification preferences updated')">
+                                    <span class="slider-switch-bg"></span>
+                                </label>
+                            </div>
+
+                            <div class="switch-ds-row">
+                                <span><i class="fa-solid fa-wand-magic-sparkles"
+                                        style="margin-right:6px; font-size:12px; color:var(--primary);"></i> AI
+                                    Suggestions</span>
+                                <label class="toggle-switch-ds">
+                                    <input type="checkbox" checked
+                                        onchange="showSystemToast('AI Mode', 'Smart suggestion engine toggled')">
+                                    <span class="slider-switch-bg"></span>
+                                </label>
+                            </div>
+
+                            <hr style="border:none; border-bottom:1px solid var(--border);">
+
+                            <div
+                                style="display:flex; justify-content:space-between; align-items:center; padding:6px 0;">
+                                <span>Sync Language</span>
+                                <strong>English (US) <i class="fa-solid fa-chevron-right"
+                                        style="font-size:10px; margin-left:6px;"></i></strong>
+                            </div>
+
+                            <div
+                                style="display:flex; justify-content:space-between; align-items:center; padding:6px 0;">
+                                <span>Household Region</span>
+                                <strong>North America <i class="fa-solid fa-chevron-right"
+                                        style="font-size:10px; margin-left:6px;"></i></strong>
+                            </div>
+
+                            <hr style="border:none; border-bottom:1px solid var(--border);">
+
+                            <button class="app-btn app-btn-secondary app-btn-sm" style="width:100%;"
+                                onclick="runSimulatedCloudBackup()"><i class="fa-solid fa-cloud-arrow-up"></i> Sync Now
+                                to Cloud Drive</button>
+                            <button class="app-btn app-btn-ghost app-btn-sm" style="width:100%; color:var(--danger);"
+                                onclick="showSystemToast('Cache Cleared', 'Local storage cache successfully purged')"><i
+                                    class="fa-solid fa-trash-can"></i> Clear Local Cache</button>
+
+                        </div>
+                    </div>
+
+
+
+                    <!-- FAQ chatbots panel -->
+                    <div class="app-premium-card card-accent-green" style="grid-column: span 2;">
+                        <strong style="font-family:var(--font-display); font-size:15px;"><i
+                                class="fa-solid fa-comments"></i> PantryBot live support & automation bot</strong>
+
+                        <div
+                            style="background:var(--surface-2); border-radius:var(--radius-md); padding:16px; min-height:180px; display:flex; flex-direction:column; justify-content:space-between; gap:12px; margin-top:12px;">
+                            <div id="settingsChatbotLog"
+                                style="font-size:13px; color:var(--text-secondary); max-height:140px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;">
+                                <div><strong style="color:var(--primary);">PantryBot:</strong> Hello Sarah, ask me
+                                    anything! Try typing commands like: *"add 3 Apples to pantry"* or *"what is
+                                    expiring?"*</div>
+                            </div>
+                            <div style="display:flex; gap:12px; align-items:center;">
+                                <input type="text" id="pantryBotCmdInput" placeholder="Type command/question..."
+                                    style="flex:1; height:36px; font-size:12.5px;"
+                                    onkeydown="if(event.key==='Enter') submitFAQKeyword(this.value)">
+                                <button class="app-btn app-btn-primary app-btn-sm"
+                                    style="height:36px; padding:0 12px; border-radius:8px;"
+                                    onclick="submitFAQKeyword(document.getElementById('pantryBotCmdInput').value)">Send</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity Timeline -->
+                    <div class="app-premium-card card-accent-blue">
+                        <strong style="font-family:var(--font-display); font-size:15px;"><i
+                                class="fa-solid fa-clock-rotate-left"></i> Recent Activity</strong>
+                        <div class="activity-timeline" id="recentActivityContainer" style="margin-top:8px;">
+                            <!-- Injected dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- About / Version Card -->
+                    <div class="app-premium-card about-version-card">
+                        <div class="version-logo">
+                            <i class="fa-solid fa-leaf"></i>
+                        </div>
+                        <strong style="font-family:var(--font-display); font-size:18px;">PantryWise OS</strong>
+                        <p style="color:var(--text-secondary); font-size:12px; margin-top:4px;">Enterprise Smart
+                            Household Storage Management</p>
+                        <span class="version-tag">v2.4.1 — Build 2026.05.21</span>
+                        <div
+                            style="margin-top:16px; display:flex; flex-direction:column; gap:6px; font-size:11.5px; color:var(--text-secondary);">
+                            <span>© 2026 PantryWise Technologies</span>
+                            <span>Licensed to HarishKUmar</span>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- MOBILE FOOTER NAV GLASSMOPHISM BAR -->
+            <nav class="mobile-bottom-navbar">
+                <button class="mobile-nav-btn active" id="mobNav-dashboard" onclick="routeToView('dashboard')">
+                    <i class="fa-solid fa-house"></i> <span>Home</span>
+                </button>
+                <button class="mobile-nav-btn" id="mobNav-pantry" onclick="routeToView('pantry')">
+                    <i class="fa-solid fa-boxes-stacked"></i> <span>Pantry</span>
+                </button>
+                <button class="mobile-barcode-fab" onclick="openSimulatedScanner('barcode')" title="Scan barcode"><i
+                        class="fa-solid fa-barcode"></i></button>
+                <button class="mobile-nav-btn" id="mobNav-shopping" onclick="routeToView('shopping')">
+                    <i class="fa-solid fa-basket-shopping"></i> <span>List</span>
+                </button>
+                <button class="mobile-nav-btn" id="mobNav-settings" onclick="routeToView('settings')">
+                    <i class="fa-solid fa-gears"></i> <span>Settings</span>
+                </button>
+            </nav>
+
+            <!-- Global Floating Help FAB -->
+            <button class="floating-help-fab"
+                onclick="routeToView('settings'); setTimeout(() => document.getElementById('pantryBotCmdInput').focus(), 400);"
+                title="Ask PantryBot">
+                <i class="fa-solid fa-comment-dots"></i>
+            </button>
+
+        </main>
+    </div>
+
+    <!-- ==========================================================================
+       OVERLAY MODALS (ADD PANTRY ITEM, EDIT PANTRY ITEM, OCR SCANNING, BARCODE MATCH)
+       ========================================================================== -->
+
+    <!-- Add Food modal -->
+    <div class="hub-overlay-modal" id="addFoodItemModal">
+        <div class="overlay-modal-card">
+            <h3 style="font-family:var(--font-display); font-weight:800; font-size:18px; margin-bottom:16px;">Add pantry
+                item uploader</h3>
+
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <div>
+                    <label
+                        style="font-size:11.5px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:4px;">Product
+                        Name</label>
+                    <input type="text" id="formFoodName" placeholder="e.g. Cream Cheese Tub">
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                    <div>
+                        <label
+                            style="font-size:11.5px; font-weight:700; display:block; margin-bottom:4px;">Quantity</label>
+                        <input type="number" id="formFoodQty" value="1">
+                    </div>
+                    <div>
+                        <label style="font-size:11.5px; font-weight:700; display:block; margin-bottom:4px;">Measurement
+                            Unit</label>
+                        <select id="formFoodUnit">
+                            <option>pcs</option>
+                            <option>liters</option>
+                            <option>grams</option>
+                            <option>packs</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label style="font-size:11.5px; font-weight:700; display:block; margin-bottom:4px;">Food Category
+                        Group</label>
+                    <select id="formFoodCategory">
+                        <option value="Dairy">Dairy 🥛</option>
+                        <option value="Fruits">Fruits 🍎</option>
+                        <option value="Bakery">Bakery 🍞</option>
+                        <option value="Veggies">Veggies 🥦</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size:11.5px; font-weight:700; display:block; margin-bottom:4px;">Expiration
+                        Date</label>
+                    <input type="date" id="formFoodExpiry" value="2026-05-29">
+                </div>
+                <div>
+                    <label style="font-size:11.5px; font-weight:700; display:block; margin-bottom:4px;">Storage
+                        Location</label>
+                    <select id="formFoodLocation">
+                        <option>Fridge</option>
+                        <option>Pantry</option>
+                        <option>Counter</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:20px;">
+                <button class="app-btn app-btn-secondary app-btn-md" onclick="closeAddPantryItemModal()">Cancel</button>
+                <button class="app-btn app-btn-primary app-btn-md" onclick="saveAddPantryItemForm()">Save
+                    Product</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Food modal -->
+    <div class="hub-overlay-modal" id="editFoodItemModal">
+        <div class="overlay-modal-card">
+            <h3 style="font-family:var(--font-display); font-weight:800; font-size:18px; margin-bottom:16px;">Modify
+                product properties</h3>
+            <input type="hidden" id="editFormFoodId">
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <div>
+                    <label
+                        style="font-size:11.5px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:4px;">Product
+                        Name</label>
+                    <input type="text" id="editFormFoodName">
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                    <div>
+                        <label
+                            style="font-size:11.5px; font-weight:700; display:block; margin-bottom:4px;">Quantity</label>
+                        <input type="number" id="editFormFoodQty">
+                    </div>
+                    <div>
+                        <label style="font-size:11.5px; font-weight:700; display:block; margin-bottom:4px;">Measurement
+                            Unit</label>
+                        <select id="editFormFoodUnit">
+                            <option>pcs</option>
+                            <option>liters</option>
+                            <option>grams</option>
+                            <option>packs</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label style="font-size:11.5px; font-weight:700; display:block; margin-bottom:4px;">Food Category
+                        Group</label>
+                    <select id="editFormFoodCategory">
+                        <option value="Dairy">Dairy 🥛</option>
+                        <option value="Fruits">Fruits 🍎</option>
+                        <option value="Bakery">Bakery 🍞</option>
+                        <option value="Veggies">Veggies 🥦</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size:11.5px; font-weight:700; display:block; margin-bottom:4px;">Expiration
+                        Date</label>
+                    <input type="date" id="editFormFoodExpiry">
+                </div>
+                <div>
+                    <label style="font-size:11.5px; font-weight:700; display:block; margin-bottom:4px;">Storage
+                        Location</label>
+                    <select id="editFormFoodLocation">
+                        <option>Fridge</option>
+                        <option>Pantry</option>
+                        <option>Counter</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:20px;">
+                <button class="app-btn app-btn-secondary app-btn-md"
+                    onclick="closeEditPantryItemModal()">Cancel</button>
+                <button class="app-btn app-btn-primary app-btn-md" onclick="saveEditPantryItemForm()">Save
+                    Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scanners simulation dialog overlays -->
+    <div class="hub-overlay-modal" id="scannerSimulatorModal">
+        <div class="overlay-modal-card" style="background:#111827; color:white; border-color:#374151; max-width:380px;">
+            <h3 style="font-family:var(--font-display); font-size:16px; margin-bottom:12px; text-align:center;"
+                id="scannerTitle">Scanner Active</h3>
+
+            <div
+                style="position:relative; width:100%; aspect-ratio:3/4; border-radius:12px; background:#1F2937; display:flex; align-items:center; justify-content:center; border:2px dashed var(--primary); overflow:hidden;">
+                <!-- laser line -->
+                <div
+                    style="position:absolute; width:100%; height:2px; background:var(--primary); box-shadow: 0 0 8px var(--primary); animation: scannerLaserPulse 2s infinite ease-in-out;">
+                </div>
+                <i class="fa-solid fa-receipt" style="font-size:72px; opacity:0.25;" id="scannerIcon"></i>
+            </div>
+
+            <p style="text-align:center; font-size:12px; color:#94A3B8; margin-top:16px;" id="scannerHelperText">Align
+                target receipt checklist within layout guides</p>
+
+            <div style="display:flex; gap:10px; margin-top:20px;">
+                <button class="app-btn app-btn-secondary app-btn-md"
+                    style="flex:1; border-color:#374151; color:white; background:none;"
+                    onclick="closeScannerSimulator()">Cancel</button>
+                <button class="app-btn app-btn-primary app-btn-md" style="flex:1;"
+                    onclick="completeSimulatedScanPipeline()">Simulate scan</button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes scannerLaserPulse {
+            0% {
+                top: 5%;
+            }
+
+            50% {
+                top: 95%;
+            }
+
+            100% {
+                top: 5%;
+            }
+        }
+    </style>
+
+    <!-- ==========================================================================
+       8. JAVASCRIPT STATE ENGINE & CORE ACTIONS
+       ========================================================================== -->
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <script src="js/config/supabaseConfig.js"></script>
+    <script src="js/config/appConfig.js"></script>
+    <script src="js/constants/authConstants.js"></script>
+    <script src="js/constants/uiConstants.js"></script>
+    <script src="js/services/authService.js"></script>
+    <script src="js/services/iotSimulatorService.js"></script>
+    <script src="js/services/itemsService.js"></script>
+    <script src="js/services/emailServiceMock.js"></script>
+    <script src="js/state/userStore.js"></script>
+    <script src="js/state/pantryStore.js"></script>
+    <script src="js/state/checklistStore.js"></script>
+    <script src="js/controllers/authController.js"></script>
+    <script src="js/controllers/dashboardController.js"></script>
+    <script src="js/controllers/pantryController.js"></script>
+    <script src="js/utils/dateUtils.js"></script>
+    <script src="js/utils/generalUtils.js"></script>
+</body>
+
+</html>

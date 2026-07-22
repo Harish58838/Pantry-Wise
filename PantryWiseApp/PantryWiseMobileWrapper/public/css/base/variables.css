@@ -1,0 +1,133 @@
+            justify-content: center;
+            gap: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .app-btn:active {
+            transform: scale(0.97);
+            opacity: 0.9;
+        }
+
+        .app-btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .app-btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .app-btn-secondary {
+            background: var(--surface-2);
+            color: var(--text-primary);
+            border: 1.5px solid var(--border);
+        }
+
+        .app-btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .app-btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .app-btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
+        }
+
+        .app-btn-ghost:hover {
+            background: var(--surface-2);
+            color: var(--text-primary);
+        }
+
+        .app-btn-lg {
+            height: 48px;
+            padding: 0 24px;
+            border-radius: var(--radius-md);
+            font-size: 15px;
+        }
+
+        .app-btn-md {
+            height: 40px;
+            padding: 0 16px;
+            border-radius: var(--radius-sm);
+            font-size: 13.5px;
+        }
+
+        .app-btn-sm {
+            height: 32px;
+            padding: 0 12px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+        }
+
+        .app-badge {
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 800;
+            display: inline-block;
+        }
+
+        .app-badge-danger {
+            background: rgba(239, 68, 68, 0.12);
+            color: var(--danger);
+        }
+
+        .app-badge-warning {
+            background: rgba(245, 158, 11, 0.12);
+            color: var(--accent);
+        }
+
+        .app-badge-success {
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--success);
+        }
+
+        /* Inputs & Selectors */
+        input,
+        select {
+            width: 100%;
+            height: 44px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            background: var(--surface);
+            padding: 0 14px;
+            color: var(--text-primary);
+            font-family: var(--font-main);
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.15);
+        }
+
+        /* Swipable List Component */
+        .swipe-item-wrapper {
+            overflow: hidden;
+            position: relative;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            margin-bottom: 12px;
+        }
+
+        .swipe-actions-under {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1;
+        }
