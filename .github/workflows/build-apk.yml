@@ -35,10 +35,10 @@ jobs:
 
       - name: Compile and Build APK
         working-directory: ./PantryWiseApp/PantryWiseMobileWrapper/android
-        run: ./gradlew assembleRelease
+        run: ./gradlew assembleDebug
         
       - name: Upload Finished APK for Download
         uses: actions/upload-artifact@v4
         with:
           name: PantryWise-Mobile-App-APK
-          path: PantryWiseApp/PantryWiseMobileWrapper/android/app/build/outputs/apk/release/app-release.apk
+          path: PantryWiseApp/PantryWiseMobileWrapper/android/app/build/outputs/apk/debug/app-debug.apk
