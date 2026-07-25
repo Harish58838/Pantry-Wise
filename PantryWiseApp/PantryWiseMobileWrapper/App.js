@@ -12,7 +12,7 @@ export default function App() {
 
   // Use port 55257 as fallback since 3000 was in use
   const ipAddress = hostUriInfo.split(':')[0];
-  const uri = `http://${ipAddress}:55257/indexall.html`;
+  const uri = `https://pantry-wise-psi.vercel.app/`;
 
   // Force HTML/Body to take 100% of the viewport and force the unstyled app to be visible.
   // We also intercept DOM load to force the splash screen overlay to display block.
