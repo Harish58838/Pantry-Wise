@@ -1,0 +1,5 @@
+selenium
+Appium-Python-Client
+requests
+pandas
+openpyxl
