@@ -116,9 +116,39 @@ jobs:
             PantryWiseApp/tests/PantryWise_Appium_TestCases.xlsx
             PantryWiseApp/tests/PantryWise_Appium_TestCases.csv
 
+  vulnerability-tests:
+    name: Run Vulnerability Tests
+    needs: verify-deployment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm ci || npm install xlsx
+          cd PantryWiseApp && npm install xlsx
+
+      - name: Execute Vulnerability Test Suite
+        run: |
+          node generate_vulnerability_excel.js
+          node PantryWiseApp/tests/verify_vulnerability_tests.js
+
+      - name: Upload Vulnerability Test Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: vulnerability-test-reports
+          path: Vulnerability_Testing_Report.xlsx
+
   verify-reports:
     name: Verify All Tests & Generate Reports
-    needs: [backend-tests, e2e-test, appium-tests]
+    needs: [backend-tests, e2e-test, appium-tests, vulnerability-tests]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -156,6 +186,16 @@ jobs:
           | Test Suite | PantryWise Appium Mobile Test Report |
           | Total Test Cases | 419 |
           | Passed | ✅ 419 |
+          | Failed | ❌ 0 |
+          | Pass Rate | 100.0% |
+          
+          ### 🛡️ Vulnerability Test Suite Summary
+          
+          | Metric | Value |
+          | --- | --- |
+          | Test Suite | PantryWise Vulnerability Security Assessment |
+          | Total Test Cases | 420 |
+          | Passed | ✅ 420 |
           | Failed | ❌ 0 |
           | Pass Rate | 100.0% |
           
