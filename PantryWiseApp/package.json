@@ -6,7 +6,14 @@
   "scripts": {
     "start": "echo \"Open index.html in a browser or use a live server\" && exit 0"
   },
-  "keywords": ["pantry", "inventory", "family"],
+  "keywords": [
+    "pantry",
+    "inventory",
+    "family"
+  ],
   "author": "Harish",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "xlsx": "^0.18.5"
+  }
 }
