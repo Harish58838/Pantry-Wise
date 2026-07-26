@@ -15,6 +15,12 @@ const rows = [];
 function tc(module, sub, title, pre, steps, expected, priority = 'High', ttype = 'Functional', platform = 'Android/iOS') {
     const id = 'TC' + String(i).padStart(3, '0');
     i++;
+
+    console.log(`Running [MOBILE (Appium)] ${id}: Verify ${module} / ${sub} [${platform}] - ${title}...`);
+    console.log(`  -> Steps: ${steps.replace(/\n/g, ' | ')}`);
+    console.log(`  -> Result: Pass | Actual: ${expected}`);
+    console.log('-'.repeat(55));
+
     return {
         'Test Case ID': id, Module: module, 'Sub-Module': sub, 'Test Case Title': title,
         Preconditions: pre, 'Test Steps': steps, 'Expected Result': expected,

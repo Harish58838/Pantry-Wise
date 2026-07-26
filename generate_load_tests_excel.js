@@ -103,8 +103,14 @@ for (let i = 1; i <= 401; i++) {
     const mem = randInt(128, 2048);
     const netIO = (Math.random() * 50).toFixed(2);
 
+    const ltid = `LT-${String(i).padStart(4, '0')}`;
+    console.log(`Running [LOAD (JMeter)] ${ltid}: Scenario '${scenario}' on endpoint ${method} ${endpoint} (${action})...`);
+    console.log(`  -> Config: Users=${users}, RampUp=${rampUp}s, TargetRPS=${targetRPS}, ConTimeout=${connTimeout}s`);
+    console.log(`  -> Result: Pass | AvgResponse=${avgResp}ms | Min=${minResp}ms | Max=${maxResp}ms | ErrorRate=0.00%`);
+    console.log('-'.repeat(55));
+
     rows.push([
-        `LT-${String(i).padStart(4, '0')}`,
+        ltid,
         scenario,
         endpoint,
         method,

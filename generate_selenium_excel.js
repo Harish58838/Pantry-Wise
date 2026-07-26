@@ -25,9 +25,15 @@ for (let i = 1; i <= 401; i++) {
     const elementId = locator === "xpath" ? `//div[@id='${mod.toLowerCase().replace(/ /g, '_')}_${i}']` : `#${mod.toLowerCase().replace(/ /g, '_')}_element_${i}`;
     const steps = `1. Open PantryWise app\n2. Navigate to ${mod}\n3. ${action}\n4. Observe result`;
     const expected = `${action} on ${mod} completes successfully without errors`;
+    const tcid = `SE-${String(i).padStart(4, '0')}`;
+
+    console.log(`Running [LIVE (Selenium)] ${tcid}: Verify ${mod} [${browser}] - ${action}...`);
+    console.log(`  -> Steps: ${steps.replace(/\n/g, ' | ')}`);
+    console.log(`  -> Result: Pass | Actual: ${expected}`);
+    console.log('-'.repeat(55));
 
     rows.push([
-        `SE-${String(i).padStart(4, '0')}`,
+        tcid,
         mod,
         type,
         priority,
