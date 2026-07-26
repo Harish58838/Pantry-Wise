@@ -132,7 +132,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm ci || npm install xlsx
+          npm ci || npm install xlsx exceljs
           cd PantryWiseApp && npm install xlsx
 
       - name: Execute Vulnerability Test Suite
